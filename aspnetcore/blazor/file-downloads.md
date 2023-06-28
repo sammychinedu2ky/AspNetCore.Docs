@@ -3,16 +3,28 @@ title: ASP.NET Core Blazor file downloads
 author: guardrex
 description: Learn how to download files using Blazor Server and Blazor WebAssembly.
 monikerRange: '>= aspnetcore-6.0'
-ms.author: taparik
+ms.author: riande
 ms.custom: mvc
-ms.date: 06/20/2022
+ms.date: 11/08/2022
 uid: blazor/file-downloads
 ---
 # ASP.NET Core Blazor file downloads
 
+[!INCLUDE[](~/includes/not-latest-version.md)]
+
 This article explains how to download files in Blazor Server and Blazor WebAssembly apps.
 
-Files can be downloaded from the app's own static assets or from any other location. When downloading files from a different origin than the app, Cross-Origin Resource Sharing (CORS) considerations apply. For more information, see the [Cross-Origin Resource Sharing (CORS)](#cross-origin-resource-sharing-cors) section.
+Files can be downloaded from the app's own static assets or from any other location:
+
+* ASP.NET Core apps use [Static File Middleware](xref:fundamentals/static-files) to serve files to clients of Blazor Server and hosted Blazor WebAssembly apps.
+* The guidance in this article also applies to other types of file servers that don't use .NET, such as Content Delivery Networks (CDNs).
+
+This article covers approaches for the following scenarios:
+
+* [Stream file content to a raw binary data buffer on the client](#download-from-a-stream): Typically, this approach is used for relatively small files (\< 250 MB).
+* [Download a file via a URL without streaming](#download-from-a-url): Usually, this approach is used for relatively large files (> 250 MB).
+
+When downloading files from a different origin than the app, Cross-Origin Resource Sharing (CORS) considerations apply. For more information, see the [Cross-Origin Resource Sharing (CORS)](#cross-origin-resource-sharing-cors) section.
 
 ## Security considerations
 
@@ -44,8 +56,6 @@ The following `downloadFileFromStream` JS function performs the following steps:
 * Remove the anchor element.
 * Revoke the object URL (`url`) by calling [`URL.revokeObjectURL`](https://developer.mozilla.org/docs/Web/API/URL/revokeObjectURL). **This is an important step to ensure memory isn't leaked on the client.**
 
-Inside the closing `</body>` tag of `Pages/_Layout.razor` (Blazor Server) or `wwwroot/index.html` (Blazor WebAssembly):
-
 ```html
 <script>
   window.downloadFileFromStream = async (fileName, contentStreamReference) => {
@@ -62,7 +72,8 @@ Inside the closing `</body>` tag of `Pages/_Layout.razor` (Blazor Server) or `ww
 </script>
 ```
 
-[!INCLUDE[](~/blazor/includes/js-location.md)]
+> [!NOTE]
+> For general guidance on JS location and our recommendations for production apps, see <xref:blazor/js-interop/index#javascript-location>.
 
 The following example component:
 
@@ -74,7 +85,17 @@ The following example component:
   * Wrap the <xref:System.IO.Stream> in a <xref:Microsoft.JSInterop.DotNetStreamReference>, which allows streaming the file data to the client.
   * Invoke the `downloadFileFromStream` JS function to accept the data on the client.
 
+:::moniker range=">= aspnetcore-7.0"
+
+:::code language="razor" source="~/../blazor-samples/7.0/BlazorSample_WebAssembly/Pages/file-downloads/FileDownload1.razor":::
+
+:::moniker-end
+
+:::moniker range="< aspnetcore-7.0"
+
 :::code language="razor" source="~/../blazor-samples/6.0/BlazorSample_WebAssembly/Pages/file-downloads/FileDownload1.razor":::
+
+:::moniker-end
 
 For a component in a Blazor Server app that must return a <xref:System.IO.Stream> for a physical file, the component can call <xref:System.IO.File.OpenRead%2A?displayProperty=nameWithType>, as the following example demonstrates:
 
@@ -98,7 +119,17 @@ The example in this section uses a download file named `quote.txt`, which is pla
 
 `wwwroot/files/quote.txt`:
 
+:::moniker range=">= aspnetcore-7.0"
+
+:::code language="text" source="~/../blazor-samples/7.0/BlazorSample_WebAssembly/wwwroot/files/quote.txt":::
+
+:::moniker-end
+
+:::moniker range="< aspnetcore-7.0"
+
 :::code language="text" source="~/../blazor-samples/6.0/BlazorSample_WebAssembly/wwwroot/files/quote.txt":::
+
+:::moniker-end
 
 The following `triggerFileDownload` JS function performs the following steps:
 
@@ -106,8 +137,6 @@ The following `triggerFileDownload` JS function performs the following steps:
 * Assign the file's name (`fileName`) and URL (`url`) for the download.
 * Trigger the download by firing a [`click` event](https://developer.mozilla.org/docs/Web/API/HTMLElement/click) on the anchor element.
 * Remove the anchor element.
-
-Inside the closing `</body>` tag of `Pages/_Layout.razor` (Blazor Server) or `wwwroot/index.html` (Blazor WebAssembly):
 
 ```html
 <script>
@@ -121,11 +150,22 @@ Inside the closing `</body>` tag of `Pages/_Layout.razor` (Blazor Server) or `ww
 </script>
 ```
 
-[!INCLUDE[](~/blazor/includes/js-location.md)]
+> [!NOTE]
+> For general guidance on JS location and our recommendations for production apps, see <xref:blazor/js-interop/index#javascript-location>.
 
 The following example component downloads the file from the same origin that the app uses. If the file download is attempted from a different origin, configure Cross-Origin Resource Sharing (CORS). For more information, see the [Cross-Origin Resource Sharing (CORS)](#cross-origin-resource-sharing-cors) section.
 
+:::moniker range=">= aspnetcore-7.0"
+
+:::code language="razor" source="~/../blazor-samples/7.0/BlazorSample_WebAssembly/Pages/file-downloads/FileDownload2.razor":::
+
+:::moniker-end
+
+:::moniker range="< aspnetcore-7.0"
+
 :::code language="razor" source="~/../blazor-samples/6.0/BlazorSample_WebAssembly/Pages/file-downloads/FileDownload2.razor":::
+
+:::moniker-end
 
 ## Cross-Origin Resource Sharing (CORS)
 
@@ -136,7 +176,7 @@ For more information on CORS with ASP.NET Core apps and other Microsoft products
 * <xref:security/cors>
 * [Using Azure CDN with CORS (Azure documentation)](/azure/cdn/cdn-cors)
 * [Cross-Origin Resource Sharing (CORS) support for Azure Storage (REST documentation)](/rest/api/storageservices/cross-origin-resource-sharing--cors--support-for-the-azure-storage-services)
-* [Core Cloud Services - Set up CORS for your website and storage assets (Learn Module)](/learn/modules/set-up-cors-website-storage/)
+* [Core Cloud Services - Set up CORS for your website and storage assets (Learn module)](/training/modules/set-up-cors-website-storage/)
 * [IIS CORS module Configuration Reference (IIS documentation)](/iis/extensions/cors-module/cors-module-configuration-reference)
 
 ## Additional resources
@@ -144,4 +184,5 @@ For more information on CORS with ASP.NET Core apps and other Microsoft products
 * <xref:blazor/js-interop/index>
 * [`<a>`: The Anchor element: Security and privacy (MDN documentation)](https://developer.mozilla.org/docs/Web/HTML/Element/a#security_and_privacy)
 * <xref:blazor/file-uploads>
-* <xref:blazor/forms-validation>
+* <xref:blazor/forms-and-input-components>
+* [Blazor samples GitHub repository (`dotnet/blazor-samples`)](https://github.com/dotnet/blazor-samples)

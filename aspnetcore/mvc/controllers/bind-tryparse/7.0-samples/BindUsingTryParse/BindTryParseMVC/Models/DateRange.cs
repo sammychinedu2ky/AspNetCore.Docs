@@ -1,32 +1,37 @@
-namespace BindTryParseMVC.Models
+namespace BindTryParseMVC.Models;
+
+// <snippet>
+public class DateRange : IParsable<DateRange>
 {
-    public class DateRange
+    public DateOnly? From { get; init; }
+    public DateOnly? To { get; init; }
+
+    public static DateRange Parse(string value, IFormatProvider? provider)
     {
-        public DateOnly? From { get; }
-        public DateOnly? To { get; }
-
-        public DateRange(string from, string to)
+        if (!TryParse(value, provider, out var result))
         {
-            if (string.IsNullOrEmpty(from))
-                throw new ArgumentNullException(nameof(from));
-            if (string.IsNullOrEmpty(to))
-                throw new ArgumentNullException(nameof(to));
-
-            From = DateOnly.Parse(from);
-            To = DateOnly.Parse(to);
+           throw new ArgumentException("Could not parse supplied value.", nameof(value));
         }
 
-        public static bool TryParse(string? value, IFormatProvider? provider, out DateRange? result)
-        {
-            if (string.IsNullOrEmpty(value) || value.Split('-').Length != 2)
-            {
-                result = default;
-                return false;
-            }
+        return result;
+    }
 
-            var range = value.Split('-');
-            result = new DateRange(range[0], range[1]);
+    public static bool TryParse(string? value,
+                                IFormatProvider? provider, out DateRange dateRange)
+    {
+        var segments = value?.Split(',', StringSplitOptions.RemoveEmptyEntries 
+                                       | StringSplitOptions.TrimEntries);
+
+        if (segments?.Length == 2
+            && DateOnly.TryParse(segments[0], provider, out var fromDate)
+            && DateOnly.TryParse(segments[1], provider, out var toDate))
+        {
+            dateRange = new DateRange { From = fromDate, To = toDate };
             return true;
         }
+
+        dateRange = new DateRange { From = default, To = default };
+        return false;
     }
 }
+// </snippet>

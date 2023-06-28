@@ -44,7 +44,7 @@ When health checks is set up:
   * `NotServing` is reported when there are any health results of <xref:Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy?displayProperty=nameWithType>.
   * Otherwise, `Serving` is reported.
 
-## Configure `Grpc.AspNetCore.HealthChecks`
+### Configure `Grpc.AspNetCore.HealthChecks`
 
 By default, the gRPC health checks service uses all registered health checks to determine health status. gRPC health checks can be customized when registered to use a subset of health checks. The `MapService` method is used to map health results to service names, along with a predicate for filtering health results:
 
@@ -58,9 +58,12 @@ gRPC health checks supports the client specifying a service name argument when c
 
 The service name specified by the client is usually the default (`""`) or a package-qualified name of a service in your app. However, nothing prevents the client using arbitrary values to check app health.
 
-## Configure health checks execution interval
+### Configure health checks execution interval
 
-Health checks are periodically executed using <xref:Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheckPublisher> to gather health results. By default, the publisher waits 5 seconds after app startup before running health checks, and then health checks are run again every 30 seconds.
+Health checks are run immediately when `Check` is called. `Watch` is a streaming method and has a different behavior than `Check`: The long running stream reports health checks results over time by periodically executing <xref:Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheckPublisher> to gather health results. By default, the publisher:
+
+* Waits 5 seconds after app startup before running health checks.
+* Runs health checks every 30 seconds.
 
 Publisher intervals can be configured using <xref:Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckPublisherOptions> at startup:
 
@@ -86,8 +89,8 @@ var status = response.Status;
 
 There are two methods on the `Health` service:
 
-* `Check` is a unary method for getting the current health status. The server returns a `NOT_FOUND` error response if the client requests an unknown service name. This can happen at app startup if health results haven't been published yet.
-* `Watch` is a streaming method that reports changes in health status over time. The server returns an `Unknown` status if the client requests an unknown service name.
+* `Check` is a unary method for getting the current health status. Health checks are executed immediately when `Check` is called. The server returns a `NOT_FOUND` error response if the client requests an unknown service name. This can happen at app startup if health results haven't been published yet.
+* `Watch` is a streaming method that reports changes in health status over time. <xref:Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheckPublisher> is periodically executed to gather health results. The server returns an `Unknown` status if the client requests an unknown service name.
 
 ## Additional resources
 
@@ -133,7 +136,7 @@ When health checks is set up:
   * `NotServing` is reported when there are any health results of <xref:Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy?displayProperty=nameWithType>.
   * Otherwise, `Serving` is reported.
 
-## Configure `Grpc.AspNetCore.HealthChecks`
+### Configure `Grpc.AspNetCore.HealthChecks`
 
 By default, the gRPC health checks service uses all registered health checks to determine health status. gRPC health checks can be customized when registered to use a subset of health checks. The `MapService` method is used to map health results to service names, along with a predicate for filtering health results:
 
@@ -158,9 +161,12 @@ services.AddGrpcHealthChecks(o =>
 
 The service name specified by the client is usually the default (`""`) or a package-qualified name of a service in your app. However, nothing prevents the client using arbitrary values to check app health.
 
-## Configure health checks execution interval
+### Configure health checks execution interval
 
-Health checks are periodically executed using <xref:Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheckPublisher> to gather health results. By default, the publisher waits 5 seconds after app startup before running health checks, and then health checks are run again every 30 seconds.
+Health checks are run immediately when `Check` is called. `Watch` is a streaming method and has a different behavior than `Check`: The long running stream reports health checks results over time by periodically executing <xref:Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheckPublisher> to gather health results. By default, the publisher:
+
+* Waits 5 seconds after app startup before running health checks.
+* Runs health checks every 30 seconds.
 
 Publisher intervals can be configured using <xref:Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckPublisherOptions> at startup:
 
@@ -186,8 +192,8 @@ var status = response.Status;
 
 There are two methods on the `Health` service:
 
-* `Check` is a unary method for getting the current health status. The server returns a `NOT_FOUND` error response if the client requests an unknown service name. This can happen at app startup if health results haven't been published yet.
-* `Watch` is a streaming method that reports changes in health status over time. The server returns an `Unknown` status if the client requests an unknown service name.
+* `Check` is a unary method for getting the current health status. Health checks are executed immediately when `Check` is called. The server returns a `NOT_FOUND` error response if the client requests an unknown service name. This can happen at app startup if health results haven't been published yet.
+* `Watch` is a streaming method that reports changes in health status over time. <xref:Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheckPublisher> is periodically executed to gather health results. The server returns an `Unknown` status if the client requests an unknown service name.
 
 ## Additional resources
 

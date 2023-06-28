@@ -5,10 +5,12 @@ description: Learn foundational concepts of the Blazor application framework.
 monikerRange: '>= aspnetcore-3.1'
 ms.author: riande
 ms.custom: mvc
-ms.date: 02/08/2022
+ms.date: 11/08/2022
 uid: blazor/fundamentals/index
 ---
 # ASP.NET Core Blazor fundamentals
+
+[!INCLUDE[](~/includes/not-latest-version.md)]
 
 *Fundamentals* articles provide guidance on foundational Blazor concepts. Some of the concepts are connected to a basic understanding of *Razor components*, which are described further in the next section of this article and covered in detail in the *Components* articles.
 
@@ -68,7 +70,7 @@ The preceding `Counter` component:
 
 Documentation sample apps are available for inspection and download:
 
-[`dotnet/blazor-samples` GitHub repository](https://github.com/dotnet/blazor-samples)
+[Blazor samples GitHub repository (`dotnet/blazor-samples`)](https://github.com/dotnet/blazor-samples)
 
 The repo contains two types of samples:
 
@@ -81,14 +83,30 @@ The repo contains two types of samples:
 > [!NOTE]
 > Not all of the preceding sample apps are available for all releases of ASP.NET Core.
 
-For more information, see the [`dotnet/blazor-samples` README.md file](https://github.com/dotnet/blazor-samples).
+For more information, see the [Blazor samples GitHub repository README.md file](https://github.com/dotnet/blazor-samples).
+
+The ASP.NET Core repository's Basic Test App is also a helpful set of samples for various Blazor scenarios:
+
+[`BasicTestApp` in ASP.NET Core reference source (`dotnet/aspnetcore`)](https://github.com/dotnet/aspnetcore/tree/main/src/Components/test/testassets/BasicTestApp)
+
+[!INCLUDE[](~/includes/aspnetcore-repo-ref-source-links.md)]
+
+## Byte multiples
+
+.NET byte sizes use metric prefixes for non-decimal multiples of bytes based on powers of 1024.
+
+| Name (abbreviation) | Size                    | Example                    |
+| ------------------- | ----------------------- | -------------------------- |
+| Kilobyte (KB)       | 1,024 bytes             | 1 KB = 1,024 bytes         |
+| Megabyte (MB)       | 1,024<sup>2</sup> bytes | 1 MB = 1,048,576 bytes     |
+| Gigabyte (GB)       | 1,024<sup>3</sup> bytes | 1 GB = 1,073,741,824 bytes |
 
 ## Support requests
 
 Only documentation-related issues are appropriate for the `dotnet/AspNetCore.Docs` repository. ***For product support, don't open a documentation issue.*** Seek assistance through one or more of the following support channels:
 
 * [Stack Overflow (tagged: `blazor`)](https://stackoverflow.com/questions/tagged/blazor)
-* [General ASP.NET Core Slack Team](https://join.slack.com/t/aspnetcore/shared_invite/zt-1b60h73p0-PZPq3YCCaPbB21RcujMSVA)
+* [General ASP.NET Core Slack Team](https://join.slack.com/t/aspnetcore/shared_invite/zt-1mv5487zb-EOZxJ1iqb0A0ajowEbxByQ)
 * [Blazor Gitter](https://gitter.im/aspnet/Blazor)
 
 For a potential bug in the framework or product feedback, open an issue for the ASP.NET Core product unit at [`dotnet/aspnetcore` issues](https://github.com/dotnet/aspnetcore/issues). Bug reports usually ***require*** the following:

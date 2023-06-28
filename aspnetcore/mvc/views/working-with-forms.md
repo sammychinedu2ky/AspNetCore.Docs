@@ -173,7 +173,7 @@ The Input Tag Helper:
 
 * Generates [HTML5](https://developer.mozilla.org/docs/Web/Guide/HTML/HTML5)  validation attributes from [data annotation](xref:Microsoft.AspNetCore.Mvc.DataAnnotations.IAttributeAdapter) attributes applied to model properties
 
-* Has an HTML Helper feature overlap with `Html.TextBoxFor` and `Html.EditorFor`. See the **HTML Helper alternatives to Input Tag Helper** section for details.
+* Has an HTML Helper feature overlap with `Html.TextBoxFor` and `Html.EditorFor`. See the [HTML Helper alternatives to Input Tag Helper](#html-helper-alternatives-to-input-tag-helper) section for details.
 
 * Provides strong typing. If the name of the property changes and you don't update the Tag Helper you'll get an error similar to the following:
 
@@ -505,8 +505,6 @@ The generated HTML (when the model is valid):
 
 ```html
 <form action="/DemoReg/Register" method="post">
-  <div class="validation-summary-valid" data-valmsg-summary="true">
-  <ul><li style="display:none"></li></ul></div>
   Email:  <input name="Email" id="Email" type="email" value=""
    data-val-required="The Email field is required."
    data-val-email="The Email field is not a valid email address."

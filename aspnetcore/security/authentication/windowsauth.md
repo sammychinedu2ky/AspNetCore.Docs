@@ -32,7 +32,7 @@ An alternative to Windows Authentication in environments where proxies and load 
 
 ## IIS/IIS Express
 
-Add authentication services by invoking <xref:Microsoft.Extensions.DependencyInjection.AuthenticationServiceCollectionExtensions.AddAuthentication*> (<xref:Microsoft.AspNetCore.Server.IISIntegration?displayProperty=fullName> namespace) in `Program.cs`:
+Add the NuGet package [Microsoft.AspNetCore.Authentication.Negotiate](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.Negotiate) and authentication services by calling <xref:Microsoft.Extensions.DependencyInjection.AuthenticationServiceCollectionExtensions.AddAuthentication*> in `Program.cs`:
 
 [!code-csharp[](windowsauth/6.0samples/WebRPwinAuth/Program.cs?name=snippet1&highlight=5-6)]
 
@@ -163,12 +163,30 @@ Anonymous requests are allowed. Use [ASP.NET Core Authorization](xref:security/a
 
 The [Microsoft.AspNetCore.Authentication.Negotiate](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.Negotiate) component performs [User Mode](/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode) authentication. Service Principal Names (SPNs) must be added to the user account running the service, not the machine account. Execute `setspn -S HTTP/myservername.mydomain.com myuser` in an administrative command shell.
 
+#### Kerberos vs NTLM
+
+The Negotiate package on Kestrel for ASP.NET Core attempts to use Kerberos, which is a more secure and peformant authentication scheme than [NTLM](/troubleshoot/windows-server/windows-security/ntlm-user-authentication):
+
+[!code-csharp[](windowsauth/6.0samples/WebRPwinAuth/Program.cs?name=snippet11&highlight=5-6)]
+
+[NegotiateDefaults.AuthenticationScheme](xref:Microsoft.AspNetCore.Authentication.Negotiate.NegotiateDefaults.AuthenticationScheme) specifies Kerberos because it's the default.
+
+IIS, IISExpress, and Kestrel support both Kerberos and [NTLM](/dotnet/framework/wcf/feature-details/understanding-http-authentication).
+
+Examining the [WWW-Authenticate:](https://developer.mozilla.org/docs/Web/HTTP/Headers/WWW-Authenticate) header using IIS or IISExpress with a tool like Fiddler shows either `Negotiate` or NTLM.
+
+Kestrel only shows `WWW-Authenticate: Negotiate`
+
+The `WWW-Authenticate: Negotiate` header means that the server can use NTLM or Kerberos. Kestrel requires the [`Negotiate` header prefix](https://www.ietf.org/rfc/rfc4559.txt), it doesn’t support directly specifying `NTLM` in the request or response auth headers. NTLM is supported in Kestrel, but it must be sent as `Negotiate`.
+
+On Kestrel, to see if NTLM or Kerberos is used, Base64 decode the the header and it shows either `NTLM` or `HTTP`. `HTTP` indicates Kerberos was used.
+
 ### Linux and macOS environment configuration
 
-Instructions for joining a Linux or macOS machine to a Windows domain are available in the [Connect Azure Data Studio to your SQL Server using Windows authentication - Kerberos](/sql/azure-data-studio/enable-kerberos?view=sql-server-2017#join-your-os-to-the-active-directory-domain-controller&preserve-view=true ) article. The instructions create a machine account for the Linux machine on the domain. SPNs must be added to that machine account.
+Instructions for joining a Linux or macOS machine to a Windows domain are available in the [Connect Azure Data Studio to your SQL Server using Windows authentication - Kerberos](/sql/azure-data-studio/enable-kerberos?view=sql-server-2017#join-your-os-to-the-active-directory-domain-controller&preserve-view=true) article. The instructions create a machine account for the Linux machine on the domain. SPNs must be added to that machine account.
 
 > [!NOTE]
-> When following the guidance in the [Connect Azure Data Studio to your SQL Server using Windows authentication - Kerberos](/sql/azure-data-studio/enable-kerberos?view=sql-server-2017#join-your-os-to-the-active-directory-domain-controller&preserve-view=true ) article, replace `python-software-properties` with `python3-software-properties` if needed.
+> When following the guidance in the [Connect Azure Data Studio to your SQL Server using Windows authentication - Kerberos](/sql/azure-data-studio/enable-kerberos?view=sql-server-2017#join-your-os-to-the-active-directory-domain-controller&preserve-view=true) article, replace `python-software-properties` with `python3-software-properties` if needed.
 
 Once the Linux or macOS machine is joined to the domain, additional steps are required to provide a [keytab file](/archive/blogs/pie/all-you-need-to-know-about-keytab-files) with the SPNs:
 
@@ -216,7 +234,7 @@ When both Windows Authentication and anonymous access are enabled, use the [[`[A
 
 ## Impersonation
 
-ASP.NET Core doesn't implement impersonation. Apps run with the app's identity for all requests, using app pool or process identity. If the app should perform an action on behalf of a user, use [WindowsIdentity.RunImpersonated](xref:System.Security.Principal.WindowsIdentity.RunImpersonated*) or <xref:System.Security.Principal.WindowsIdentity.RunImpersonatedAsync%2A> in a [terminal inline middleware](xref:fundamentals/middleware/index#create-a-middleware-pipeline-with-iapplicationbuilder) in `Startup.Configure`. Run a single action in this context and then close the context.
+ASP.NET Core doesn't implement impersonation. Apps run with the app's identity for all requests, using app pool or process identity. If the app should perform an action on behalf of a user, use [WindowsIdentity.RunImpersonated](xref:System.Security.Principal.WindowsIdentity.RunImpersonated*) or <xref:System.Security.Principal.WindowsIdentity.RunImpersonatedAsync%2A> in a [terminal inline middleware](xref:fundamentals/middleware/index#create-a-middleware-pipeline-with-iapplicationbuilder) in `Program.cs`. Run a single action in this context and then close the context.
 
 [!code-csharp[](windowsauth/6.0samples/WebRPwinAuth/Program.cs?name=snippet_imp&highlight=10-19)]
 
@@ -416,10 +434,10 @@ The [Microsoft.AspNetCore.Authentication.Negotiate](https://www.nuget.org/packag
 
 ### Linux and macOS environment configuration
 
-Instructions for joining a Linux or macOS machine to a Windows domain are available in the [Connect Azure Data Studio to your SQL Server using Windows authentication - Kerberos](/sql/azure-data-studio/enable-kerberos?view=sql-server-2017#join-your-os-to-the-active-directory-domain-controller&preserve-view=true ) article. The instructions create a machine account for the Linux machine on the domain. SPNs must be added to that machine account.
+Instructions for joining a Linux or macOS machine to a Windows domain are available in the [Connect Azure Data Studio to your SQL Server using Windows authentication - Kerberos](/sql/azure-data-studio/enable-kerberos?view=sql-server-2017#join-your-os-to-the-active-directory-domain-controller&preserve-view=true) article. The instructions create a machine account for the Linux machine on the domain. SPNs must be added to that machine account.
 
 > [!NOTE]
-> When following the guidance in the [Connect Azure Data Studio to your SQL Server using Windows authentication - Kerberos](/sql/azure-data-studio/enable-kerberos?view=sql-server-2017#join-your-os-to-the-active-directory-domain-controller&preserve-view=true ) article, replace `python-software-properties` with `python3-software-properties` if needed.
+> When following the guidance in the [Connect Azure Data Studio to your SQL Server using Windows authentication - Kerberos](/sql/azure-data-studio/enable-kerberos?view=sql-server-2017#join-your-os-to-the-active-directory-domain-controller&preserve-view=true) article, replace `python-software-properties` with `python3-software-properties` if needed.
 
 Once the Linux or macOS machine is joined to the domain, additional steps are required to provide a [keytab file](/archive/blogs/pie/all-you-need-to-know-about-keytab-files) with the SPNs:
 

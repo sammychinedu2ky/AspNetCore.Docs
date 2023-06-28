@@ -16,7 +16,7 @@ Visual Studio 2017 and later versions support building, debugging, and running c
 ## Prerequisites
 
 * [Docker for Windows](https://docs.docker.com/desktop/windows/install/)
-* [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/?utm_medium=microsoft&utm_source=docs.microsoft.com&utm_campaign=inline+link&utm_content=download+vs2019) with the **.NET Core cross-platform development** workload
+* [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/?utm_medium=microsoft&utm_source=learn.microsoft.com&utm_campaign=inline+link&utm_content=download+vs2019) with the **.NET Core cross-platform development** workload
 
 ## Installation and setup
 
@@ -82,7 +82,7 @@ Visual Studio 2017 versions 15.8 or later add an orchestration solution only whe
 
 * [Docker Compose](#docker-compose)
 * [Service Fabric](#service-fabric)
-* [Kubernetes/Helm ](https://helm.sh/)
+* [Kubernetes/Helm](https://helm.sh/)
 
 ### Docker Compose
 
@@ -237,3 +237,4 @@ There may be an expectation for the production or release image to be smaller in
 * [Troubleshoot Visual Studio development with Docker](/azure/vs-azure-tools-docker-troubleshooting-docker-errors)
 * [Visual Studio Container Tools GitHub repository](https://github.com/Microsoft/DockerTools)
 * [GC using Docker and small containers](xref:performance/memory#sc)
+* [System.IO.IOException: The configured user limit (128) on the number of inotify instances has been reached](xref:host-and-deploy/docker/index#d128)

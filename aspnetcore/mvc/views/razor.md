@@ -254,7 +254,40 @@ To render the rest of an entire line as HTML inside a code block, use `@:` synta
 
 Without the `@:` in the code, a Razor runtime error is generated.
 
-Extra `@` characters in a Razor file can cause compiler errors at statements later in the block. These compiler errors can be difficult to understand because the actual error occurs before the reported error. This error is common after combining multiple implicit/explicit expressions into a single code block.
+Extra `@` characters in a Razor file can cause compiler errors at statements later in the block. These extra `@` compiler errors:
+
+* Can be difficult to understand because the actual error occurs before the reported error.
+* Is common after combining multiple implicit and explicit expressions into a single code block.
+
+### Conditional attribute rendering
+
+Razor automatically omits attributes that aren't needed. If the value passed in is `null` or `false`, the attribute isn't rendered.
+
+For example,  consider the following razor:
+
+```cshtml
+<div class="@false">False</div>
+<div class="@null">Null</div>
+<div class="@("")">Empty</div>
+<div class="@("false")">False String</div>
+<div class="@("active")">String</div>
+<input type="checkbox" checked="@true" name="true" />
+<input type="checkbox" checked="@false" name="false" />
+<input type="checkbox" checked="@null" name="null" />
+```
+
+The preceding Razor markup generates the following HTML:
+
+```html
+<div>False</div>
+<div>Null</div>
+<div class="">Empty</div>
+<div class="false">False String</div>
+<div class="active">String</div>
+<input type="checkbox" checked="checked" name="true">
+<input type="checkbox" name="false">
+<input type="checkbox" name="null">
+```
 
 ## Control structures
 
@@ -466,6 +499,13 @@ The `@attribute` directive adds the given attribute to the class of the generate
 @attribute [Authorize]
 ```
 
+The `@attribute` directive can also be used to supply a constant-based route template in a Razor component. In the following example, the `@page` directive in a component is replaced with the `@attribute` directive and the constant-based route template in `Constants.CounterRoute`, which is set elsewhere in the app to "`/counter`":
+
+```diff
+- @page "/counter"
++ @attribute [Route(Constants.CounterRoute)]
+```
+
 ### `@code`
 
 *This scenario only applies to Razor components (`.razor`).*
@@ -618,7 +658,7 @@ In an ASP.NET Core MVC or Razor Pages app created with individual user accounts,
 @model LoginViewModel
 ```
 
-The class generated inherits from `RazorPage<dynamic>`:
+The class generated inherits from `RazorPage<LoginViewModel>`:
 
 ```csharp
 public class _Views_Account_Login_cshtml : RazorPage<LoginViewModel>
@@ -948,9 +988,25 @@ C# Razor keywords must be double-escaped with `@(@C# Razor Keyword)` (for exampl
 
 ## Inspect the Razor C# class generated for a view
 
-The [Razor SDK](xref:razor-pages/sdk) handles compilation of Razor files. When building a project, the Razor SDK generates an `obj/<build_configuration>/<target_framework_moniker>/Razor` directory in the project root. The directory structure within the `Razor` directory mirrors the project's directory structure.
+::: moniker range=">= aspnetcore-5.0"
 
-Consider the following directory structure in an ASP.NET Core Razor Pages project:
+The [Razor SDK](xref:razor-pages/sdk) handles compilation of Razor files. By default, the generated code files aren't emitted. To enable emitting the code files, set the `EmitCompilerGeneratedFiles` directive in the project file (`.csproj`) to `true`:
+
+```xml
+<PropertyGroup>
+  <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+</PropertyGroup>
+```
+
+When building a 6.0 project (`net6.0`) in the `Debug` build configuration, the Razor SDK generates an `obj/Debug/net6.0/generated/` directory in the project root. Its subdirectory contains the emitted Razor page code files.
+
+::: moniker-end
+
+::: moniker range="< aspnetcore-5.0"
+
+The [Razor SDK](xref:razor-pages/sdk) handles compilation of Razor files. When building a project, the Razor SDK generates an `obj/{BUILD CONFIGURATION}/{TARGET FRAMEWORK MONIKER}/Razor` directory in the project root. The directory structure within the `Razor` directory mirrors the project's directory structure.
+
+Consider the following directory structure in an ASP.NET Core Razor Pages 2.1 project:
 
 ```
  Areas/
@@ -965,9 +1021,9 @@ Consider the following directory structure in an ASP.NET Core Razor Pages projec
    _ViewStart.cshtml
    Index.cshtml
    Index.cshtml.cs
-  ```
+```
 
-Building the project in *Debug* configuration yields the following `obj` directory:
+Building the project in `Debug` configuration yields the following `obj` directory:
 
 ```
  obj/
@@ -987,6 +1043,8 @@ Building the project in *Debug* configuration yields the following `obj` directo
 ```
 
 To view the generated class for `Pages/Index.cshtml`, open `obj/Debug/netcoreapp2.1/Razor/Pages/Index.g.cshtml.cs`.
+
+::: moniker-end
 
 ## View lookups and case sensitivity
 

@@ -1,6 +1,6 @@
 ---
 title: Use multiple environments in ASP.NET Core
-author: rick-anderson
+author: tdykstra
 description: Learn how to control app behavior across multiple environments in ASP.NET Core apps.
 monikerRange: '>= aspnetcore-3.1'
 ms.author: riande
@@ -18,10 +18,24 @@ ASP.NET Core configures app behavior based on the runtime environment using an e
 
 ## Environments
 
+:::moniker-end
+:::moniker range=">= aspnetcore-6.0 < aspnetcore-7.0"
 To determine the runtime environment, ASP.NET Core reads from the following environment variables:
 
 1. [DOTNET_ENVIRONMENT](xref:fundamentals/configuration/index#default-host-configuration)
 1. `ASPNETCORE_ENVIRONMENT` when the <xref:Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder%2A?displayProperty=nameWithType> method is called. The default ASP.NET Core web app templates call `WebApplication.CreateBuilder`. The `ASPNETCORE_ENVIRONMENT` value overrides `DOTNET_ENVIRONMENT`.
+
+:::moniker-end
+
+:::moniker range=">= aspnetcore-7.0"
+To determine the runtime environment, ASP.NET Core reads from the following environment variables:
+
+1. [DOTNET_ENVIRONMENT](xref:fundamentals/configuration/index#default-host-configuration)
+1. `ASPNETCORE_ENVIRONMENT` when the <xref:Microsoft.AspNetCore.Builder.WebApplication.CreateBuilder%2A?displayProperty=nameWithType> method is called. The default ASP.NET Core web app templates call `WebApplication.CreateBuilder`. The `DOTNET_ENVIRONMENT` value overrides `ASPNETCORE_ENVIRONMENT` when `WebApplicationBuilder` is used. For other hosts, such as `ConfigureWebHostDefaults` and `WebHost.CreateDefaultBuilder`, `ASPNETCORE_ENVIRONMENT` has higher precedence.
+
+:::moniker-end
+
+:::moniker range=">= aspnetcore-6.0"
 
 `IHostEnvironment.EnvironmentName` can be set to any value, but the following values are provided by the framework:
 
@@ -78,7 +92,7 @@ The preceding command sets the environment to `Production` and displays output s
 
 ### Development and launchSettings.json
 
-The development environment can enable features that shouldn't be exposed in production. For example, the ASP.NET Core project templates enable the [Developer Exception Page](xref:fundamentals/error-handling#developer-exception-page) in the development environment.
+The development environment can enable features that shouldn't be exposed in production. For example, the ASP.NET Core project templates enable the [Developer Exception Page](xref:fundamentals/error-handling#developer-exception-page) in the development environment. Because of the performance cost, scope validation and dependency validation only happens in development. <!--https://github.com/dotnet/AspNetCore.Docs/issues/22626-->
 
 The environment for local machine development can be set in the *Properties\launchSettings.json* file of the project. Environment values set in `launchSettings.json` override values set in the system environment.
 
@@ -136,7 +150,7 @@ The `.vscode/launch.json` file is used only by Visual Studio Code.
 
 ### Production
 
-The production environment should be configured to maximize security, [performance](xref:performance/performance-best-practices), and application robustness. Some common settings that differ from development include:
+The production environment should be configured to maximize security, [performance](xref:performance/overview), and application robustness. Some common settings that differ from development include:
 
 * [Caching](xref:performance/caching/memory).
 * Client-side resources are bundled, minified, and potentially served from a CDN.
@@ -407,7 +421,7 @@ The `.vscode/launch.json` file is only used by Visual Studio Code.
 
 ### Production
 
-The production environment should be configured to maximize security, [performance](xref:performance/performance-best-practices), and application robustness. Some common settings that differ from development include:
+The production environment should be configured to maximize security, [performance](xref:performance/overview), and application robustness. Some common settings that differ from development include:
 
 * [Caching](xref:performance/caching/memory).
 * Client-side resources are bundled, minified, and potentially served from a CDN.

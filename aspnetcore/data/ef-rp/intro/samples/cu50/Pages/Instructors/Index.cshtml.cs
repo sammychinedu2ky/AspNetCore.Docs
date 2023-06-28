@@ -3,6 +3,7 @@ using ContosoUniversity.Models;
 using ContosoUniversity.Models.SchoolViewModels;  // Add VM
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,15 +48,11 @@ namespace ContosoUniversity.Pages.Instructors
             if (courseID != null)
             {
                 CourseID = courseID.Value;
-                var selectedCourse = InstructorData.Courses
-                    .Where(x => x.CourseID == courseID).Single();
-                await _context.Entry(selectedCourse)
-                              .Collection(x => x.Enrollments).LoadAsync();
-                foreach (Enrollment enrollment in selectedCourse.Enrollments)
-                {
-                  await _context.Entry(enrollment).Reference(x => x.Student).LoadAsync();
-                }
-                InstructorData.Enrollments = selectedCourse.Enrollments;
+                IEnumerable<Enrollment> Enrollments = await _context.Enrollments
+                    .Where(x => x.CourseID == CourseID)                    
+                    .Include(i=>i.Student)
+                    .ToListAsync();                 
+                InstructorData.Enrollments = Enrollments;
             }
             #endregion
         }

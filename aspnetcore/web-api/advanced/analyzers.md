@@ -1,6 +1,6 @@
 ---
 title: Use web API analyzers
-author: rick-anderson
+author: tdykstra
 description: Learn about the ASP.NET Core MVC web API analyzers package.
 monikerRange: '>= aspnetcore-3.1'
 ms.author: riande
@@ -40,6 +40,10 @@ One of the analyzers in the package inspects controllers annotated with <xref:Mi
 The preceding action documents the HTTP 200 success return type but doesn't document the HTTP 404 failure status code. The analyzer reports the missing documentation for the HTTP 404 status code as a warning. An option to fix the problem is provided.
 
 ![analyzer reporting a warning](conventions/_static/Analyzer.gif)
+
+## Analyzers require Microsoft.NET.Sdk.Web
+
+Analyzers don't work with library projects or projects referencing `Sdk="Microsoft.NET.Sdk"`.
 
 ## Additional resources
 

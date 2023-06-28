@@ -57,7 +57,10 @@ builder.Services
         () => new GrpcWebHandler(new HttpClientHandler()));
 ```
 
-For more information, see [Configure gRPC-Web with the .NET gRPC client](xref:grpc/browser#configure-grpc-web-with-the-net-grpc-client).
+For more information, see [Configure gRPC-Web with the .NET gRPC client](xref:grpc/grpcweb#configure-grpc-web-with-the-net-grpc-client).
+
+> [!IMPORTANT]
+> gRPC-Web requires the client ***and*** server to support it. gRPC-Web can be [quickly configured by an ASP.NET Core gRPC server](xref:grpc/grpcweb#configure-grpc-web-in-aspnet-core). Other gRPC server implementations require a proxy to support gRPC-Web.
 
 ## .NET Framework
 
@@ -69,7 +72,6 @@ Requirements and restrictions to using `WinHttpHandler`:
 * A reference to [`System.Net.Http.WinHttpHandler`](https://www.nuget.org/packages/System.Net.Http.WinHttpHandler/) version 6.0.1 or later.
 * Configure `WinHttpHandler` on the channel using `GrpcChannelOptions.HttpHandler`.
 * .NET Framework 4.6.1 or later.
-* Only unary and server streaming gRPC calls are supported.
 * Only gRPC calls over TLS are supported.
 
 ```csharp

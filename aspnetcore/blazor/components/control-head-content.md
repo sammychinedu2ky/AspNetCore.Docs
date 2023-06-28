@@ -5,10 +5,12 @@ description: Learn how to control head content in Blazor apps, including how to 
 monikerRange: '>= aspnetcore-6.0'
 ms.author: riande
 ms.custom: mvc
-ms.date: 11/09/2021
+ms.date: 11/08/2022
 uid: blazor/components/control-head-content
 ---
 # Control `<head>` content in ASP.NET Core Blazor apps
+
+[!INCLUDE[](~/includes/not-latest-version.md)]
 
 Razor components can modify the HTML `<head>` element content of a page, including setting the page's title (`<title>` element) and modifying metadata (`<meta>` elements).
 
@@ -22,7 +24,19 @@ The following example sets the page's title and description using Razor.
 
 `Pages/ControlHeadContent.razor`:
 
+:::moniker range=">= aspnetcore-7.0"
+
+:::code language="razor" source="~/../blazor-samples/7.0/BlazorSample_WebAssembly/Pages/control-head-content/ControlHeadContent.razor" highlight="13,15-17":::
+
+:::moniker-end
+
+:::moniker range="< aspnetcore-7.0"
+
 :::code language="razor" source="~/../blazor-samples/6.0/BlazorSample_WebAssembly/Pages/control-head-content/ControlHeadContent.razor" highlight="13,15-17":::
+
+:::moniker-end
+
+:::moniker range="< aspnetcore-7.0"
 
 ## Control `<head>` content during prerendering
 
@@ -44,6 +58,8 @@ In a **required**, shared `_Layout.cshtml` file of a prerendered hosted Blazor W
 <component type="typeof(HeadOutlet)" render-mode="WebAssemblyPrerendered" />
 ```
 
+:::moniker-end
+
 ## `HeadOutlet` component
 
 The <xref:Microsoft.AspNetCore.Components.Web.HeadOutlet> component renders content provided by <xref:Microsoft.AspNetCore.Components.Web.PageTitle> and <xref:Microsoft.AspNetCore.Components.Web.HeadContent> components.
@@ -56,7 +72,17 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 When the [`::after` pseudo-selector](https://developer.mozilla.org/docs/Web/CSS/::after) is specified, the contents of the root component are appended to the existing head contents instead of replacing the content. This allows the app to retain static head content in `wwwroot/index.html` without having to repeat the content in the app's Razor components.
 
+:::moniker range=">= aspnetcore-7.0"
+
+In Blazor Server apps created from the Blazor Server project template, a [Component Tag Helper](xref:mvc/views/tag-helpers/builtin-th/component-tag-helper) renders `<head>` content for the <xref:Microsoft.AspNetCore.Components.Web.HeadOutlet> component in `Pages/_Host.cshtml`:
+
+:::moniker-end
+
+:::moniker range="< aspnetcore-7.0"
+
 In Blazor Server apps created from the Blazor Server project template, a [Component Tag Helper](xref:mvc/views/tag-helpers/builtin-th/component-tag-helper) renders `<head>` content for the <xref:Microsoft.AspNetCore.Components.Web.HeadOutlet> component in `Pages/_Layout.cshtml`:
+
+:::moniker-end
 
 ```cshtml
 <head>
@@ -78,6 +104,7 @@ In Blazor apps created from Blazor project templates, the `NotFound` component t
 ## Additional resources
 
 * [Control headers in C# code at startup](xref:blazor/fundamentals/startup#control-headers-in-c-code)
+* [Blazor samples GitHub repository (`dotnet/blazor-samples`)](https://github.com/dotnet/blazor-samples)
 
 Mozilla MDN Web Docs documentation:
 

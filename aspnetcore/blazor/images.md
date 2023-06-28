@@ -3,12 +3,14 @@ title: Work with images in ASP.NET Core Blazor
 author: guardrex
 description: Learn how to work with images in ASP.NET Core Blazor apps.
 monikerRange: '>= aspnetcore-6.0'
-ms.author: taparik
+ms.author: riande
 ms.custom: mvc
-ms.date: 06/21/2022
+ms.date: 11/08/2022
 uid: blazor/images
 ---
 # Work with images in ASP.NET Core Blazor
+
+[!INCLUDE[](~/includes/not-latest-version.md)]
 
 This article describes common scenarios for working with images in Blazor apps. 
 
@@ -32,12 +34,22 @@ In the following `ShowImage1` component:
 
 `Pages/ShowImage1.razor`:
 
+:::moniker range=">= aspnetcore-7.0"
+
+:::code language="razor" source="~/../blazor-samples/7.0/BlazorSample_WebAssembly/Pages/images/ShowImage1.razor":::
+
+:::moniker-end
+
+:::moniker range="< aspnetcore-7.0"
+
 :::code language="razor" source="~/../blazor-samples/6.0/BlazorSample_WebAssembly/Pages/images/ShowImage1.razor":::
+
+:::moniker-end
 
 The preceding example uses a C# field to hold the image's source data, but you can also use a C# property to hold the data.
 
 > [!NOTE]
-> Do **not** use a loop variable directly in a lambda expression, such as `i` in the preceding `for` loop example. Otherwise, the same variable is used by all lambda expressions, which results in use of the same value in all lambdas. Always capture the variable's value in a local variable and then use the local variable. In the preceding example:
+> Avoid using a loop variable directly in a lambda expression, such as `i` in the preceding `for` loop example. Otherwise, the same variable is used by all lambda expressions, which results in use of the same value in all lambdas. Capture the variable's value in a local variable. In the preceding example:
 >
 > * The loop variable `i` is assigned to `imageId`.
 > * `imageId` is used in the lambda expression.
@@ -52,10 +64,14 @@ The preceding example uses a C# field to hold the image's source data, but you c
 >     </button>
 > }
 > ```
+>
+> For more information, see <xref:blazor/components/event-handling#lambda-expressions>.
 
-## Stream images
+## Stream image data
 
-The examples in this section stream image source data using [JavaScript (JS) interop](xref:blazor/js-interop/index). The following `setImage` JS function accepts the `<img>` tag `id` and data stream for the image for use in the following examples of this section. The function performs the following steps:
+An image can be directly sent to the client using Blazor's streaming interop features instead of hosting the image at a public URL.
+
+The example in this section streams image source data using [JavaScript (JS) interop](xref:blazor/js-interop/index). The following `setImage` JS function accepts the `<img>` tag `id` and data stream for the image. The function performs the following steps:
 
 * Reads the provided stream into an [`ArrayBuffer`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer).
 * Creates a [`Blob`](https://developer.mozilla.org/docs/Web/API/Blob) to wrap the `ArrayBuffer`.
@@ -63,28 +79,23 @@ The examples in this section stream image source data using [JavaScript (JS) int
 * Updates the `<img>` element with the specified `imageElementId` with the object URL just created.
 * To prevent memory leaks, the function calls [`revokeObjectURL`](https://developer.mozilla.org/docs/Web/API/URL/revokeObjectURL) to dispose of the object URL when the component is finished working with an image.
 
-Inside the closing `</body>` tag of `Pages/_Layout.razor` (Blazor Server) or `wwwroot/index.html` (Blazor WebAssembly):
-
 ```html
 <script>
   window.setImage = async (imageElementId, imageStream) => {
     const arrayBuffer = await imageStream.arrayBuffer();
     const blob = new Blob([arrayBuffer]);
     const url = URL.createObjectURL(blob);
-    document.getElementById(imageElementId).src = url;
-    URL.revokeObjectURL(url);
+    const image = document.getElementById(imageElementId);
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+    }
+    image.src = url;
   }
 </script>
 ```
 
-[!INCLUDE[](~/blazor/includes/js-location.md)]
-
 > [!NOTE]
-> When implementing the preceding function for a form (<xref:Microsoft.AspNetCore.Components.Forms.EditForm> component), it usually isn't necessary to revoke the object URL because it's typically revoked after the user submits the form for processing, as the object URL is no longer required at that point. For a form that uses `setImage`, you can remove the call to [`revokeObjectURL`](https://developer.mozilla.org/docs/Web/API/URL/revokeObjectURL).
-
-### Stream image data to a client
-
-An image can be directly sent to the client using Blazor's streaming interop features instead of hosting the image at a public URL.
+> For general guidance on JS location and our recommendations for production apps, see <xref:blazor/js-interop/index#javascript-location>.
 
 The following `ShowImage2` component:
 
@@ -94,22 +105,35 @@ The following `ShowImage2` component:
 * Has a `SetImageAsync` method that's triggered on the button's selection by the user. `SetImageAsync` performs the following steps:
   * Retrieves the <xref:System.IO.Stream> from `GetImageStreamAsync`.
   * Wraps the <xref:System.IO.Stream> in a <xref:Microsoft.JSInterop.DotNetStreamReference>, which allows streaming the image data to the client.
-  * Invokes the `setImage` JavaScript function ([shown earlier](#stream-images)), which accepts the data on the client.
+  * Invokes the `setImage` JavaScript function, which accepts the data on the client.
 
 > [!NOTE]
 > Blazor Server apps use a dedicated <xref:System.Net.Http.HttpClient> service to make requests, so no action is required by the developer in Blazor Server apps to register an <xref:System.Net.Http.HttpClient> service. Blazor WebAssembly apps have a default <xref:System.Net.Http.HttpClient> service registration when the app is created from a Blazor WebAssembly project template. If an <xref:System.Net.Http.HttpClient> service registration isn't present in `Program.cs` of a Blazor WebAssembly app, provide one by adding `builder.Services.AddHttpClient();`. For more information, see <xref:fundamentals/http-requests>.
 
 `Pages/ShowImage2.razor`:
 
+:::moniker range=">= aspnetcore-7.0"
+
+:::code language="razor" source="~/../blazor-samples/7.0/BlazorSample_WebAssembly/Pages/images/ShowImage2.razor":::
+
+:::moniker-end
+
+:::moniker range="< aspnetcore-7.0"
+
 :::code language="razor" source="~/../blazor-samples/6.0/BlazorSample_WebAssembly/Pages/images/ShowImage2.razor":::
 
-### Preview an image provided by the `InputFile` component
-
-[!INCLUDE[](includes/inputfile-preview-images.md)]
+:::moniker-end
 
 ## Additional resources
+
+<!--
+
+* <xref:blazor/forms-and-input-components#preview-an-image-provided-by-the-inputfile-component>
+
+-->
 
 * <xref:blazor/file-uploads>
 * <xref:blazor/file-downloads>
 * <xref:blazor/js-interop/call-dotnet-from-javascript#stream-from-javascript-to-net>
 * <xref:blazor/js-interop/call-javascript-from-dotnet#stream-from-net-to-javascript>
+* [Blazor samples GitHub repository (`dotnet/blazor-samples`)](https://github.com/dotnet/blazor-samples)

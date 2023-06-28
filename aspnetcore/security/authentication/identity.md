@@ -16,7 +16,6 @@ By [Rick Anderson](https://twitter.com/RickAndMSFT)
 ASP.NET Core Identity:
 
 * Is an API that supports user interface (UI) login functionality.
-* Is designed to be used together with [Duende IdentityServer4](https://duendesoftware.com/products/identityserver).
 * Manages users, passwords, profile data, roles, claims, tokens, email confirmation, and more.
 
 Users can create an account with the login information stored in Identity or they can use an external login provider. Supported external login providers include [Facebook, Google, Microsoft Account, and Twitter](xref:security/authentication/social/index).
@@ -29,13 +28,12 @@ Identity is typically configured using a SQL Server database to store user names
 
 In this topic, you learn how to use Identity to register, log in, and log out a user. Note: the templates treat username and email as the same for users. For more detailed instructions about creating apps that use Identity, see [Next Steps](#next).
 
-[Microsoft identity platform](/azure/active-directory/develop/) is:
+ASP.NET Core Identity isn't related to the [Microsoft identity platform](/azure/active-directory/develop/). Microsoft identity platform is:
 
 * An evolution of the Azure Active Directory (Azure AD) developer platform.
 * An alternative identity solution for authentication and authorization in ASP.NET Core apps.
-* Not related to ASP.NET Core Identity.
 
-[!INCLUDE[](~/includes/IdentityServer4.md)]
+[!INCLUDE[](~/includes/DuendeIdentityServer.md)]
 
 [View or download the sample code](https://github.com/dotnet/AspNetCore.Docs/tree/main/aspnetcore/security/authentication/identity/sample) ([how to download](xref:index#how-to-download-a-sample)).
 
@@ -246,6 +244,7 @@ To prevent publishing static Identity assets (stylesheets and JavaScript files f
 ## Next Steps
 
 * [ASP.NET Core Identity source code](https://github.com/dotnet/aspnetcore/tree/main/src/Identity)
+* [How to work with Roles in ASP.NET Core Identity](https://www.yogihosting.com/aspnet-core-identity-roles/) <!-- https://github.com/dotnet/AspNetCore.Docs/issues/7114 ->
 * See [this GitHub issue](https://github.com/dotnet/AspNetCore.Docs/issues/5131) for information on configuring Identity using SQLite.
 * [Configure Identity](xref:security/authentication/identity-configuration)
 * <xref:security/authorization/secure-data>
@@ -265,7 +264,6 @@ By [Rick Anderson](https://twitter.com/RickAndMSFT)
 ASP.NET Core Identity:
 
 * Is an API that supports user interface (UI) login functionality.
-* Is designed to be used together with [Duende IdentityServer4](https://duendesoftware.com/products/identityserver).
 * Manages users, passwords, profile data, roles, claims, tokens, email confirmation, and more.
 
 Users can create an account with the login information stored in Identity or they can use an external login provider. Supported external login providers include [Facebook, Google, Microsoft Account, and Twitter](xref:security/authentication/social/index).

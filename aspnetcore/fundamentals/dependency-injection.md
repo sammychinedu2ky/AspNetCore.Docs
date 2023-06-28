@@ -80,7 +80,7 @@ The updated `Program.cs` registers the new `IMyDependency` implementation:
 
 It's not unusual to use dependency injection in a chained fashion. Each requested dependency in turn requests its own dependencies. The container resolves the dependencies in the graph and returns the fully resolved service. The collective set of dependencies that must be resolved is typically referred to as a *dependency tree*, *dependency graph*, or *object graph*.
 
-The container resolves `ILogger<TCategoryName>` by taking advantage of [(generic) open types](/dotnet/csharp/language-reference/language-specification/types#open-and-closed-types), eliminating the need to register every [(generic) constructed type](/dotnet/csharp/language-reference/language-specification/types#constructed-types).
+The container resolves `ILogger<TCategoryName>` by taking advantage of [(generic) open types](/dotnet/csharp/language-reference/language-specification/types#843-open-and-closed-types), eliminating the need to register every [(generic) constructed type](/dotnet/csharp/language-reference/language-specification/types#84-constructed-types).
 
 In dependency injection terminology, a service:
 
@@ -222,7 +222,7 @@ If a class has a lot of injected dependencies, it might be a sign that the class
 The container calls <xref:System.IDisposable.Dispose%2A> for the <xref:System.IDisposable> types it creates. Services resolved from the container should never be disposed by the developer. If a type or factory is registered as a singleton, the container disposes the singleton automatically.
 
 In the following example, the services are created by the service container and disposed automatically:
-                dependency-injection\samples\6.x\DIsample2\Services\Service1.cs
+                dependency-injection\samples\6.x\DIsample2\DIsample2\Services\Service1.cs
 [!code-csharp[](dependency-injection/samples/6.x/DIsample2/DIsample2/Services/Service1.cs?name=snippet)]
 
 [!code-csharp[](dependency-injection/samples/6.x/DIsample2/DIsample2/Program.cs?name=snippet)]
@@ -234,7 +234,7 @@ The debug console shows the following output after each refresh of the Index pag
 ```console
 Service1: IndexModel.OnGet
 Service2: IndexModel.OnGet
-Service3: IndexModel.OnGet
+Service3: IndexModel.OnGet, MyKey = MyKey from appsettings.Developement.json
 Service1.Dispose
 ```
 
@@ -274,16 +274,16 @@ See [Recommendations](/dotnet/core/extensions/dependency-injection-guidelines#re
   public class MyClass
   {
       private readonly IOptionsMonitor<MyOptions> _optionsMonitor;
-
+  
       public MyClass(IOptionsMonitor<MyOptions> optionsMonitor)
       {
           _optionsMonitor = optionsMonitor;
       }
-
+  
       public void MyMethod()
       {
           var option = _optionsMonitor.CurrentValue.Option;
-
+  
           ...
       }
   }
@@ -316,7 +316,7 @@ DI is an *alternative* to static/global object access patterns. You may not be a
 
 ## Recommended patterns for multi-tenancy in DI
 
-[Orchard Core](https://github.com/OrchardCMS/OrchardCore) is an application framework for building modular, multi-tenant applications on ASP.NET Core. For more information, see the [Orchard Core Documentation](https://docs.orchardcore.net/en/dev/).
+[Orchard Core](https://github.com/OrchardCMS/OrchardCore) is an application framework for building modular, multi-tenant applications on ASP.NET Core. For more information, see the [Orchard Core Documentation](https://docs.orchardcore.net).
 
 See the [Orchard Core samples](https://github.com/OrchardCMS/OrchardCore.Samples) for examples of how to build modular and multi-tenant apps using just the Orchard Core Framework without any of its CMS-specific features.
 
@@ -449,7 +449,7 @@ The updated `ConfigureServices` method registers the new `IMyDependency` impleme
 
 It's not unusual to use dependency injection in a chained fashion. Each requested dependency in turn requests its own dependencies. The container resolves the dependencies in the graph and returns the fully resolved service. The collective set of dependencies that must be resolved is typically referred to as a *dependency tree*, *dependency graph*, or *object graph*.
 
-The container resolves `ILogger<TCategoryName>` by taking advantage of [(generic) open types](/dotnet/csharp/language-reference/language-specification/types#open-and-closed-types), eliminating the need to register every [(generic) constructed type](/dotnet/csharp/language-reference/language-specification/types#constructed-types).
+The container resolves `ILogger<TCategoryName>` by taking advantage of [(generic) open types](/dotnet/csharp/language-reference/language-specification/types#843-open-and-closed-types), eliminating the need to register every [(generic) constructed type](/dotnet/csharp/language-reference/language-specification/types#84-constructed-types).
 
 In dependency injection terminology, a service:
 
@@ -628,7 +628,7 @@ The debug console shows the following output after each refresh of the Index pag
 ```console
 Service1: IndexModel.OnGet
 Service2: IndexModel.OnGet
-Service3: IndexModel.OnGet
+Service3: IndexModel.OnGet, MyKey = My Key from config
 Service1.Dispose
 ```
 
@@ -668,16 +668,16 @@ See [Recommendations](/dotnet/core/extensions/dependency-injection-guidelines#re
   public class MyClass
   {
       private readonly IOptionsMonitor<MyOptions> _optionsMonitor;
-
+  
       public MyClass(IOptionsMonitor<MyOptions> optionsMonitor)
       {
           _optionsMonitor = optionsMonitor;
       }
-
+  
       public void MyMethod()
       {
           var option = _optionsMonitor.CurrentValue.Option;
-
+  
           ...
       }
   }
@@ -709,7 +709,7 @@ DI is an *alternative* to static/global object access patterns. You may not be a
 
 ## Recommended patterns for multi-tenancy in DI
 
-[Orchard Core](https://github.com/OrchardCMS/OrchardCore) is an application framework for building modular, multi-tenant applications on ASP.NET Core. For more information, see the [Orchard Core Documentation](https://docs.orchardcore.net/en/dev/).
+[Orchard Core](https://github.com/OrchardCMS/OrchardCore) is an application framework for building modular, multi-tenant applications on ASP.NET Core. For more information, see the [Orchard Core Documentation](https://docs.orchardcore.net).
 
 See the [Orchard Core samples](https://github.com/OrchardCMS/OrchardCore.Samples) for examples of how to build modular and multi-tenant apps using just the Orchard Core Framework without any of its CMS-specific features.
 

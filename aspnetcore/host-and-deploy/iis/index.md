@@ -29,11 +29,13 @@ Apps published for 32-bit (x86) or 64-bit (x64) deployment are supported. Deploy
 
 ## Install the ASP.NET Core Module/Hosting Bundle
 
-Download the installer using the following link:
+Download the latest installer using the following link:
 
 [Current .NET Core Hosting Bundle installer (direct download)](https://dotnet.microsoft.com/permalink/dotnetcore-current-windows-runtime-bundle-installer)
 
 For more details instructions on how to install the ASP.NET Core Module, or installing different versions, see [Install the .NET Core Hosting Bundle](xref:host-and-deploy/iis/hosting-bundle).
+
+To download previous versions of the hosting bundle, see [this GitHub issue](https://github.com/dotnet/AspNetCore.Docs/issues/28642).
 
 ## Get started
 
@@ -373,7 +375,7 @@ When deploying apps to servers with [Web Deploy](/iis/install/installing-publish
    ![Supply the Site name, physical path, and Host name in the Add Website step.](index/_static/add-website-ws2016.png)
 
    > [!WARNING]
-   > Top-level wildcard bindings (`http://*:80/` and `http://+:80`) should **not** be used. Top-level wildcard bindings can open up your app to security vulnerabilities. This applies to both strong and weak wildcards. Use explicit host names rather than wildcards. Subdomain wildcard binding (for example, `*.mysub.com`) doesn't have this security risk if you control the entire parent domain (as opposed to `*.com`, which is vulnerable). See [rfc7230 section-5.4](https://tools.ietf.org/html/rfc7230#section-5.4) for more information.
+   > Top-level wildcard bindings (`http://*:80/` and `http://+:80`) should **not** be used. Top-level wildcard bindings can open up your app to security vulnerabilities. This applies to both strong and weak wildcards. Use explicit host names rather than wildcards. Subdomain wildcard binding (for example, `*.mysub.com`) doesn't have this security risk if you control the entire parent domain (as opposed to `*.com`, which is vulnerable). See [RFC 9110: HTTP Semantics (Section 7.2: Host and :authority)](https://www.rfc-editor.org/rfc/rfc9110#field.host) for more information.
 
 1. Under the server's node, select **Application Pools**.
 
@@ -942,7 +944,7 @@ When deploying apps to servers with [Web Deploy](/iis/install/installing-publish
    ![Supply the Site name, physical path, and Host name in the Add Website step.](index/_static/add-website-ws2016.png)
 
    > [!WARNING]
-   > Top-level wildcard bindings (`http://*:80/` and `http://+:80`) should **not** be used. Top-level wildcard bindings can open up your app to security vulnerabilities. This applies to both strong and weak wildcards. Use explicit host names rather than wildcards. Subdomain wildcard binding (for example, `*.mysub.com`) doesn't have this security risk if you control the entire parent domain (as opposed to `*.com`, which is vulnerable). See [rfc7230 section-5.4](https://tools.ietf.org/html/rfc7230#section-5.4) for more information.
+   > Top-level wildcard bindings (`http://*:80/` and `http://+:80`) should **not** be used. Top-level wildcard bindings can open up your app to security vulnerabilities. This applies to both strong and weak wildcards. Use explicit host names rather than wildcards. Subdomain wildcard binding (for example, `*.mysub.com`) doesn't have this security risk if you control the entire parent domain (as opposed to `*.com`, which is vulnerable). See [RFC 9110: HTTP Semantics (Section 7.2: Host and :authority)](https://www.rfc-editor.org/rfc/rfc9110#field.host) for more information.
 
 1. Under the server's node, select **Application Pools**.
 

@@ -1,6 +1,6 @@
 ---
 title: Host and deploy ASP.NET Core
-author: rick-anderson
+author: tdykstra
 description: Learn how to set up hosting environments and deploy ASP.NET Core apps.
 monikerRange: '>= aspnetcore-2.1'
 ms.author: riande
@@ -21,6 +21,10 @@ In general, to deploy an ASP.NET Core app to a hosting environment:
 ## Publish to a folder
 
 The [dotnet publish](/dotnet/core/tools/dotnet-publish) command compiles app code and copies the files required to run the app into a *publish* folder. When deploying from Visual Studio, the `dotnet publish` step occurs automatically before the files are copied to the deployment destination.
+
+### Run the published app locally
+
+To run the published app locally, run `dotnet <ApplicationName>.dll` from the *publish* folder.
 
 ## Publish settings files
 
@@ -74,7 +78,7 @@ Additional configuration might be required for apps hosted behind proxy servers 
 
 ## Use Visual Studio and MSBuild to automate deployments
 
-Deployment often requires additional tasks besides copying the output from [dotnet publish](/dotnet/core/tools/dotnet-publish) to a server. For example, extra files might be required or excluded from the *publish* folder. Visual Studio uses [MSBuild](/visualstudio/msbuild/msbuild) for web deployment, and MSBuild can be customized to do many other tasks during deployment. For more information, see <xref:host-and-deploy/visual-studio-publish-profiles> and the [Using MSBuild and Team Foundation Build](http://msbuildbook.com/) book.
+Deployment often requires additional tasks besides copying the output from [dotnet publish](/dotnet/core/tools/dotnet-publish) to a server. For example, extra files might be required or excluded from the *publish* folder. Visual Studio uses [MSBuild](/visualstudio/msbuild/msbuild) for web deployment, and MSBuild can be customized to do many other tasks during deployment. For more information, see <xref:host-and-deploy/visual-studio-publish-profiles> and the [Using MSBuild and Team Foundation Build](https://www.microsoftpressstore.com/store/inside-the-microsoft-build-engine-using-msbuild-and-9780735645240) book.
 
 By using [the Publish Web feature](xref:tutorials/publish-to-azure-webapp-using-vs) apps can be deployed directly from Visual Studio to the Azure App Service. Azure DevOps Services supports [continuous deployment to Azure App Service](/azure/devops/pipelines/targets/webapp). For more information, see [DevOps for ASP.NET Core Developers](/dotnet/architecture/devops-for-aspnet-developers).
 
@@ -152,7 +156,7 @@ Additional configuration might be required for apps hosted behind proxy servers 
 
 ## Use Visual Studio and MSBuild to automate deployments
 
-Deployment often requires additional tasks besides copying the output from [dotnet publish](/dotnet/core/tools/dotnet-publish) to a server. For example, extra files might be required or excluded from the *publish* folder. Visual Studio uses MSBuild for web deployment, and MSBuild can be customized to do many other tasks during deployment. For more information, see <xref:host-and-deploy/visual-studio-publish-profiles> and the [Using MSBuild and Team Foundation Build](http://msbuildbook.com/) book.
+Deployment often requires additional tasks besides copying the output from [dotnet publish](/dotnet/core/tools/dotnet-publish) to a server. For example, extra files might be required or excluded from the *publish* folder. Visual Studio uses MSBuild for web deployment, and MSBuild can be customized to do many other tasks during deployment. For more information, see <xref:host-and-deploy/visual-studio-publish-profiles> and the [Using MSBuild and Team Foundation Build](https://www.microsoftpressstore.com/store/inside-the-microsoft-build-engine-using-msbuild-and-9780735645240) book.
 
 By using [the Publish Web feature](xref:tutorials/publish-to-azure-webapp-using-vs), apps can be deployed directly from Visual Studio to the Azure App Service. Azure DevOps Services supports [continuous deployment to Azure App Service](/azure/devops/pipelines/targets/webapp). For more information, see [DevOps for ASP.NET Core Developers](/dotnet/architecture/devops-for-aspnet-developers).
 

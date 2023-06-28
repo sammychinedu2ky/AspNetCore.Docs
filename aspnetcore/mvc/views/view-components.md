@@ -89,6 +89,7 @@ The runtime searches for the view in the following paths:
 * /Views/{Controller Name}/Components/{View Component Name}/{View Name}
 * /Views/Shared/Components/{View Component Name}/{View Name}
 * /Pages/Shared/Components/{View Component Name}/{View Name}
+* /Areas/{Area Name}/Views/Shared/Components/{View Component Name}/{View Name}
 
 The search path applies to projects using controllers + views and Razor Pages.
 
@@ -200,7 +201,7 @@ Notes on the code:
 
    The Razor view takes a list of `TodoItem` and displays them. If the view component `InvokeAsync` method doesn't pass the name of the view, *Default* is used for the view name by convention. To override the default styling for a specific controller, add a view to the controller-specific view folder (for example *Views/ToDo/Components/PriorityList/Default.cshtml)*.
 
-    If the view component is controller-specific, it can be added it to the controller-specific folder. For example, `Views/ToDo/Components/PriorityList/Default.cshtml` is controller-specific.
+    If the view component is controller-specific, it can be added to the controller-specific folder. For example, `Views/ToDo/Components/PriorityList/Default.cshtml` is controller-specific.
 * Add a `div` containing a call to the priority list component to the bottom of the `Views/ToDo/index.cshtml` file:
 
     [!code-cshtml[](view-components/sample6.x/ViewCompFinal/Views/ToDo/Index.cshtml?name=snippet2)]
@@ -393,6 +394,7 @@ The runtime searches for the view in the following paths:
 * /Views/{Controller Name}/Components/{View Component Name}/{View Name}
 * /Views/Shared/Components/{View Component Name}/{View Name}
 * /Pages/Shared/Components/{View Component Name}/{View Name}
+* /Areas/{Area Name}/Views/Shared/Components/{View Component Name}/{View Name}
 
 The search path applies to projects using controllers + views and Razor Pages.
 

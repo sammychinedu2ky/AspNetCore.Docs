@@ -1,16 +1,16 @@
 ---
 title: Enforce HTTPS in ASP.NET Core
-author: rick-anderson
+author: tdykstra
 description: Learn how to require HTTPS/TLS in an ASP.NET Core web app.
 ms.author: riande
 monikerRange: '>= aspnetcore-3.0'
 ms.custom: mvc
-ms.date: 03/10/2022
+ms.date: 2/14/2023
 uid: security/enforcing-ssl
 ---
 # Enforce HTTPS in ASP.NET Core
 
-By [Rick Anderson](https://twitter.com/RickAndMSFT)
+By [David Galvan](https://www.linkedin.com/in/dave-galvan/) and [Rick Anderson](https://twitter.com/RickAndMSFT)
 
 This document shows how to:
 
@@ -239,9 +239,9 @@ There are two approaches to trusting the HTTPS certificate with Firefox, create 
 
 #### Create a policy file to trust HTTPS certificate with Firefox
 
-Create a policy file at:
+Create a policy file (`policies.json`) at:
 
-* Windows: `%PROGRAMFILES%\Mozilla Firefox\distribution\policies.json`
+* Windows: `%PROGRAMFILES%\Mozilla Firefox\distribution\`
 * MacOS: `Firefox.app/Contents/Resources/distribution`
 * Linux: See [Trust the certificate with Firefox on Linux](#trust-ff-linux) in this document.
 
@@ -283,6 +283,8 @@ Establishing trust is distribution and browser specific. The following sections 
 
 ### Ubuntu trust the certificate for service-to-service communication
 
+The following instructions don't work for some Ubuntu versions, such as 20.04. For more information, see GitHub issue [dotnet/AspNetCore.Docs #23686](https://github.com/dotnet/AspNetCore.Docs/issues/23686).
+
 1. Install [OpenSSL](https://www.openssl.org/) 1.1.1h or later. See your distribution for instructions on how to update OpenSSL.
 1. Run the following commands:
 
@@ -298,12 +300,13 @@ The preceding commands:
 * Exports the certificate with elevated permissions needed for the `ca-certificates` folder, using the current user's environment.
 * Removing the `-E`  flag exports the root user certificate, generating it if necessary. Each newly generated certificate has a different thumbprint. When running as root, `sudo`  and  `-E` are not needed.
 
-
 The path in the preceding command is specific for Ubuntu. For other distributions, select an appropriate path or use the path for the Certificate Authorities (CAs).
 
 <a name="ssl-linux"></a>
 
 ### Trust HTTPS certificate on Linux using Edge or Chrome
+
+# [Ubuntu](#tab/linux-ubuntu)
 
 For chromium browsers on Linux:
 
@@ -329,7 +332,7 @@ For chromium browsers on Linux:
 
 <a name="trust-ff-linux"></a>
 
-### Trust the certificate with Firefox on Linux
+#### Trust the certificate with Firefox on Linux
 
 * Export the certificate with the following command:
 
@@ -340,7 +343,7 @@ For chromium browsers on Linux:
 
   The path in the preceding command is specific for Ubuntu. For other distributions, select an appropriate path or use the path for the Certificate Authorities (CAs).
 
-* Create a JSON file at `/usr/lib/firefox/distribution/policies.json` with the following contents:
+* Create a JSON file at `/usr/lib/firefox/distribution/policies.json` with the following command:
 
 ```sh
 cat <<EOF | sudo tee /usr/lib/firefox/distribution/policies.json
@@ -358,11 +361,187 @@ EOF
   
 See [Configure trust of HTTPS certificate using Firefox browser](#trust-ff-ba) in this document for an alternative way to configure the policy file using the browser.
 
+# [Red Hat Enterprise Linux](#tab/linux-rhel)
+
+> [!WARNING]
+> The following instructions are intended for development purposes only. Do not use the certificates generated in these instructions for a production environment.
+
+These instructions use Mozilla's *legacy* tool `certutil` at  `https://firefox-source-docs.mozilla.org/security/nss/legacy/tools/nss_tools_certutil/index.html`. Instructions may be updated as modern utilities and practices are discovered.
+
+> [!CAUTION]
+> Improper use of TLS certificates could lead to spoofing.
+
+> [!TIP]
+> Instructions for valid production certificates can be found in the RHEL Documentation.
+> [RHEL8 TLS Certificates](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/securing_networks/index#creating-and-managing-tls-keys-and-certificates_securing-networks)
+> [RHEL9 TLS Certificates](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/securing_networks/index#creating-and-managing-tls-keys-and-certificates_securing-networks)
+> [RHEL9 Certificate System](https://access.redhat.com/documentation/en-us/red_hat_certificate_system/9)
+
+### Install Dependencies
+
+```sh
+dnf install nss-tools
+```
+
+### Export The ASP.NET Core Development Certificate
+
+> [!IMPORTANT]
+> Replace `${ProjectDirectory}` with your projects directory.
+> Replace `${CertificateName}` with a name you'll be able to identify in the future.
+
+```sh
+cd ${ProjectDirectory}
+dotnet dev-certs https -ep ${ProjectDirectory}/${CertificateName}.crt --format PEM
+```
+
+> [!CAUTION]
+> If using git, add your certificate to your `${ProjectDirectory}/.gitignore` or `${ProjectDirectory}/.git/info/exclude`.
+> View the [git documentation](https://git-scm.com/docs/gitignore) for information about these files.
+
+> [!TIP]
+> You can move your exported certificate outside of your Git repository and replace the occurrences of `${ProjectDirectory}`, in the following instructions, with the new location.
+
+### Import The ASP.NET Core Development Certificate
+
+> [!IMPORTANT]
+> Replace `${UserProfile}` with the profile you intend to use.
+> Do not replace `$HOME`, it is the environment variable to your user directory.
+
+#### Chromium-based Browsers
+
+```sh
+certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n ${CertificateName} -i ${ProjectDirectory}/${CertificateName}.crt
+certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n ${CertificateName} -i ${ProjectDirectory}/${CertificateName}.crt
+```
+
+#### Mozilla Firefox
+
+```sh
+certutil -d sql:$HOME/.mozilla/firefox/${UserProfile}/ -A -t "P,," -n ${CertificateName} -i ${ProjectDirectory}/${CertificateName}.crt
+certutil -d sql:$HOME/.mozilla/firefox/${UserProfile}/ -A -t "C,," -n ${CertificateName} -i ${ProjectDirectory}/${CertificateName}.crt
+```
+
+#### Create An Alias To Test With Curl
+
+> [!IMPORTANT]
+>
+> Don't delete the exported certificate if you plan to test with curl.
+> You'll need to create an alias referencing it in your `$SHELL`'s profile
+
+```sh
+alias curl="curl --cacert ${ProjectDirectory}/${CertificateName}.crt"
+```
+
+### Cleaning up the Development Certificates
+
+```sh
+certutil -d sql:$HOME/.pki/nssdb -D -n ${CertificateName}
+certutil -d sql:$HOME/.mozilla/firefox/${UserProfile}/ -D -n ${CertificateName}
+rm ${ProjectDirectory}/${CertificateName}.crt
+dotnet dev-certs https --clean
+```
+
+>[!NOTE]
+> Remove the curl alias you created earlier
+
+# [SUSE Linux Enterprise Server](#tab/linux-sles)
+
+See [this GitHub issue](https://github.com/dotnet/AspNetCore.Docs/issues/28292)
+
+<!--
+> [!WARNING]
+> The following instructions are intended for development purposes only. Do not use the certificates generated in these instructions for a production environment.
+
+These instructions use Mozilla's *legacy* tool [certutil](https://firefox-source-docs.mozilla.org/security/nss/legacy/tools/nss_tools_certutil/index.html). Instructions may be updated as modern utilities and practices are discovered.
+
+> [!CAUTION]
+> Improper use of TLS certificates could lead to spoofing.
+
+> [!TIP]
+> Instructions for valid production certificates can be found in the RHEL Documentation.
+> [RHEL8 TLS Certificates](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/securing_networks/index#creating-and-managing-tls-keys-and-certificates_securing-networks)
+> [RHEL9 TLS Certificates](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/securing_networks/index#creating-and-managing-tls-keys-and-certificates_securing-networks)
+> [RHEL9 Certificate System](https://access.redhat.com/documentation/en-us/red_hat_certificate_system/9)
+
+### Install Dependencies
+
+```sh
+dnf install nss-tools
+```
+
+### Export The ASP.NET Core Development Certificate
+
+> [!IMPORTANT]
+> Replace `${ProjectDirectory}` with your projects directory.
+> Replace `${CertificateName}` with a name you'll be able to identify in the future.
+
+```sh
+cd ${ProjectDirectory}
+dotnet dev-certs https -ep ${ProjectDirectory}/${CertificateName}.crt --format PEM
+```
+
+> [!CAUTION]
+> If using git, add your certificate to your `${ProjectDirectory}/.gitignore` or `${ProjectDirectory}/.git/info/exclude`.
+> View the [git documentation](https://git-scm.com/docs/gitignore) for information about these files.
+
+> [!TIP]
+> You can move your exported certificate outside of your Git repository and replace the occurrences of `${ProjectDirectory}`, in the following instructions, with the new location.
+
+### Import The ASP.NET Core Development Certificate
+
+> [!IMPORTANT]
+> Replace `${UserProfile}` with the profile you intend to use.
+> Do not replace `$HOME`, it is the environment variable to your user directory.
+
+#### Chromium-based Browsers
+
+```sh
+certutil -d sql:$HOME/.pki/nssdb -A -t "P,," -n ${CertificateName} -i ${ProjectDirectory}/${CertificateName}.crt
+certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n ${CertificateName} -i ${ProjectDirectory}/${CertificateName}.crt
+```
+
+#### Mozilla Firefox
+
+```sh
+certutil -d sql:$HOME/.mozilla/firefox/${UserProfile}/ -A -t "P,," -n ${CertificateName} -i ${ProjectDirectory}/${CertificateName}.crt
+certutil -d sql:$HOME/.mozilla/firefox/${UserProfile}/ -A -t "C,," -n ${CertificateName} -i ${ProjectDirectory}/${CertificateName}.crt
+```
+
+#### Create An Alias To Test With Curl
+
+> [!IMPORTANT]
+>
+> Don't delete the exported certificate if you plan to test with curl.
+> You'll need to create an alias referencing it in your `$SHELL`'s profile
+
+```sh
+alias curl="curl --cacert ${ProjectDirectory}/${CertificateName}.crt"
+```
+
+### Cleaning up the Development Certificates
+
+```sh
+certutil -d sql:$HOME/.pki/nssdb -D -n ${CertificateName}
+certutil -d sql:$HOME/.mozilla/firefox/${UserProfile}/ -D -n ${CertificateName}
+rm ${ProjectDirectory}/${CertificateName}.crt
+dotnet dev-certs https --clean
+```
+
+>[!NOTE]
+> Remove the curl alias you created earlier
+-->
+
+---
+
 <a name="wsl"></a>
 
 ### Trust the certificate with Fedora 34
 
-See [this GitHub comment](https://github.com/dotnet/aspnetcore/issues/32361#issuecomment-837111639).
+See:
+
+* [This GitHub comment](https://github.com/dotnet/aspnetcore/issues/32361#issuecomment-837111639)
+* [Fedora: Using Shared System Certificates](https://docs.fedoraproject.org/en-US/quick-docs/using-shared-system-certificates/)
+* [Set up a .NET development environment](https://fedoramagazine.org/set-up-a-net-development-environment/) on Fedora.
 
 ### Trust the certificate with other distros
 
@@ -370,9 +549,11 @@ See [this GitHub issue](https://github.com/dotnet/aspnetcore/issues/32842).
 
 ## Trust HTTPS certificate from Windows Subsystem for Linux
 
-The [Windows Subsystem for Linux (WSL)](/windows/wsl/about) generates an HTTPS self-signed development certificate. To configure the Windows certificate store to trust the WSL certificate:
+The following instructions don't work for some Linux distributions, such as Ubuntu 20.04. For more information, see GitHub issue [dotnet/AspNetCore.Docs #23686](https://github.com/dotnet/AspNetCore.Docs/issues/23686).
 
-* Export the developer certificate to a file on ***Windows***:
+The [Windows Subsystem for Linux (WSL)](/windows/wsl/about) generates an HTTPS self-signed development certificate, which by default isn't trusted in Windows. The easiest way to have Windows trust the WSL certificate, is to configure WSL to use the same certificate as Windows:
+
+* On ***Windows***, export the developer certificate to a file:
 
   ```
   dotnet dev-certs https -ep https.pfx -p $CREDENTIAL_PLACEHOLDER$ --trust
@@ -720,9 +901,9 @@ There are two approaches to trusting the HTTPS certificate with Firefox, create 
 
 #### Create a policy file to trust HTTPS certificate with Firefox
 
-Create a policy file at:
+Create a policy file (`policies.json`) at:
 
-* Windows: `%PROGRAMFILES%\Mozilla Firefox\distribution\policies.json`
+* Windows: `%PROGRAMFILES%\Mozilla Firefox\distribution\`
 * MacOS: `Firefox.app/Contents/Resources/distribution`
 * Linux: See [Trust the certificate with Firefox on Linux](#trust-ff-linux) in this document.
 
@@ -1005,5 +1186,6 @@ To fix problems with the IIS Express certificate, select **Repair** from the Vis
 * [Host ASP.NET Core on Linux with Nginx: HTTPS configuration](xref:host-and-deploy/linux-nginx#https-configuration)
 * [How to Set Up SSL on IIS](/iis/manage/configuring-security/how-to-set-up-ssl-on-iis)
 * [OWASP HSTS browser support](https://www.owasp.org/index.php/HTTP_Strict_Transport_Security_Cheat_Sheet#Browser_Support)
+* [`dotnet dev-certs`](/dotnet/core/tools/dotnet-dev-certs)
 
 :::moniker-end

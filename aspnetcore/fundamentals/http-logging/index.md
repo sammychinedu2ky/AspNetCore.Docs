@@ -1,9 +1,9 @@
 ---
 title: HTTP Logging in .NET Core and ASP.NET Core
-author: jkotalik
+author: rick-anderson
 description: Learn how to log HTTP Requests and Response.
 monikerRange: '>= aspnetcore-6.0'
-ms.author: jukotali
+ms.author: riande
 ms.custom: mvc
 ms.date: 04/20/2021
 uid: fundamentals/http-logging/index
@@ -13,7 +13,7 @@ uid: fundamentals/http-logging/index
 
 :::moniker range=">= aspnetcore-6.0"
 
-HTTP Logging is a middleware that logs information about HTTP requests and HTTP responses. HTTP logging provides logs of:
+HTTP Logging is a middleware that logs information about incoming HTTP requests and HTTP responses. HTTP logging provides logs of:
 
 * HTTP request information
 * Common properties
@@ -54,6 +54,9 @@ To configure the HTTP logging middleware, call <xref:Microsoft.Extensions.Depend
 
 [!code-csharp[](samples/6.x/Program.cs?name=snippet_Addservices)]
 
+> [!NOTE]
+> In the preceding sample and following samples, `UseHttpLogging` is called after `UseStaticFiles`, so HTTP logging is not enabled for static file. To enable static file HTTP logging, call `UseHttpLogging` before `UseStaticFiles`.
+
 ### `LoggingFields`
 
 [`HttpLoggingOptions.LoggingFields`](xref:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.LoggingFields) is an enum flag that configures specific parts of the request and response to log. ``HttpLoggingOptions.LoggingFields`` defaults to <xref:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders> | <xref:Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders>.
@@ -69,6 +72,8 @@ To configure the HTTP logging middleware, call <xref:Microsoft.Extensions.Depend
 <xref:Microsoft.AspNetCore.HttpLogging.HttpLoggingOptions.MediaTypeOptions> provides configuration for selecting which encoding to use for a specific media type.
 
 [!code-csharp[](samples/6.x/Program.cs?name=snippet_Addservices&highlight=10)]
+
+This approach can also be used to enable logging for data that is not logged by default (e.g. form data, which might have a media type such as `application/x-www-form-urlencoded` or `multipart/form-data`).
 
 #### `MediaTypeOptions` methods
 

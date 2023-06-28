@@ -186,7 +186,7 @@ Support for working with query strings is improved. For more information, see <x
 Binding supports multiple option selection with `<input>` elements. For more information, see the following resources:
 
 * <xref:blazor/components/data-binding?view=aspnetcore-6.0#multiple-option-selection-with-input-elements>
-* <xref:blazor/forms-validation?view=aspnetcore-6.0#multiple-option-selection-with-the-inputselect-component>
+* <xref:blazor/forms-and-input-components?view=aspnetcore-6.0#multiple-option-selection-with-the-inputselect-component>
 
 ### Head (`<head>`) content control
 
@@ -387,7 +387,7 @@ See [Template generated ports for Kestrel](#tgp) in this document for more infor
 
 ### Authentication servers
 
-.NET 3 to .NET 5 used [IdentityServer4](https://identityserver4.readthedocs.io/latest/) as part of our template to support the issuing of JWT tokens for SPA and Blazor applications. The templates now use the [Duende Identity Server](https://docs.duendesoftware.com/identityserver/v5).
+.NET 3 to .NET 5 used [IdentityServer4](https://identityserver4.readthedocs.io) as part of our template to support the issuing of JWT tokens for SPA and Blazor applications. The templates now use the [Duende Identity Server](https://docs.duendesoftware.com/identityserver/v5).
 
 If you are extending the identity models and are updating existing projects you need to update the namespaces in your code from `IdentityServer4.IdentityServer` to `Duende.IdentityServer` and follow their [migration instructions](https://docs.duendesoftware.com/identityserver/v5/upgrades/).
 
@@ -490,7 +490,7 @@ The change from `"Microsoft": "Warning"` to `"Microsoft.AspNetCore": "Warning"` 
 <!-- TODO add and routing -->
 ### Developer exception page Middleware added automatically
 
-In the [develoment environment](xref:fundamentals/environments), the <xref:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware> is added by default. It's no longer necessary to add the following code to web UI apps:
+In the [development environment](xref:fundamentals/environments), the <xref:Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware> is added by default. It's no longer necessary to add the following code to web UI apps:
 
 ```csharp
 if (app.Environment.IsDevelopment())

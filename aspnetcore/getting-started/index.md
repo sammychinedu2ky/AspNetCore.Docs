@@ -1,6 +1,6 @@
 ---
 title: Get started with ASP.NET Core
-author: rick-anderson
+author: tdykstra
 description: A short tutorial using the .NET CLI to create and run a basic Hello World app using ASP.NET Core.
 monikerRange: ">= aspnetcore-3.1"
 ms.author: riande
@@ -26,7 +26,10 @@ At the end, you'll have a working web app running on your local machine.
 
 ## Prerequisites
 
-:::moniker range=">= aspnetcore-6.0"
+:::moniker range=">= aspnetcore-7.0"
+[!INCLUDE[](~/includes/7.0-SDK.md)]
+:::moniker-end
+:::moniker range=">= aspnetcore-6.0  < aspnetcore-7.0"
 [!INCLUDE[](~/includes/6.0-SDK.md)]
 :::moniker-end
 :::moniker range=">= aspnetcore-5.0 < aspnetcore-6.0"
@@ -94,7 +97,7 @@ cd aspnetcoreapp
 dotnet watch run
 ```
 
-After the command shell indicates that the app has started, browse to `https://localhost:5001`.
+After the command shell indicates that the app has started, browse to `https://localhost:{port}`, where `{port}`is the random port used.
 
 ## Edit a Razor page
 
@@ -102,7 +105,7 @@ Open `Pages/Index.cshtml` and modify and save the page with the following highli
 
 :::code language="cshtml" source="sample/index.cshtml" highlight="9":::
 
-Browse to `https://localhost:5001`, refresh the page, and verify the changes are displayed.
+Browse to `https://localhost:{port}`, refresh the page, and verify the changes are displayed.
 
 ## Next steps
 

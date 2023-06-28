@@ -1,6 +1,6 @@
 ---
 title: Logging in .NET Core and ASP.NET Core
-author: rick-anderson
+author: tdykstra
 description: Learn how to use the logging framework provided by the Microsoft.Extensions.Logging NuGet package.
 monikerRange: '>= aspnetcore-3.1'
 ms.author: riande
@@ -344,9 +344,9 @@ Each log API uses a message template. The message template can contain placehold
 The *order of the parameters*, not their placeholder names, determines which parameters are used to provide placeholder values in log messages. In the following code, the parameter names are out of sequence in the placeholders of the message template:
 
 ```csharp
-string apples = 1;
-string pears = 2;
-string bananas = 3;
+var apples = 1;
+var pears = 2;
+var bananas = 3;
 
 _logger.LogInformation("Parameters: {pears}, {bananas}, {apples}", apples, pears, bananas);
 ```
@@ -730,14 +730,14 @@ For more information, see the following resources:
 * [Application Insights for ASP.NET Core applications](/azure/azure-monitor/app/asp-net-core): Start here if you want to implement the full range of Application Insights telemetry along with logging.
 * [ApplicationInsightsLoggerProvider for .NET Core ILogger logs](/azure/azure-monitor/app/ilogger): Start here if you want to implement the logging provider without the rest of Application Insights telemetry.
 * [Application Insights logging adapters](/azure/azure-monitor/app/asp-net-trace-logs)
-* [Install, configure, and initialize the Application Insights SDK](/learn/modules/instrument-web-app-code-with-application-insights): Interactive tutorial on the Microsoft Learn site.
+* [Install, configure, and initialize the Application Insights SDK](/training/modules/instrument-web-app-code-with-application-insights) interactive tutorial.
 
 ## Third-party logging providers
 
 Third-party logging frameworks that work with ASP.NET Core:
 
 * [elmah.io](https://elmah.io/) ([GitHub repo](https://github.com/elmahio/Elmah.Io.Extensions.Logging))
-* [Gelf](https://docs.graylog.org/en/2.3/pages/gelf.html) ([GitHub repo](https://github.com/mattwcole/gelf-extensions-logging))
+* [Gelf](https://go2docs.graylog.org/5-0/getting_in_log_data/gelf.html) ([GitHub repo](https://github.com/mattwcole/gelf-extensions-logging))
 * [JSNLog](https://jsnlog.com/) ([GitHub repo](https://github.com/mperdeck/jsnlog))
 * [KissLog.net](https://kisslog.net/) ([GitHub repo](https://github.com/catalingavan/KissLog-net))
 * [Log4Net](https://logging.apache.org/log4net/) ([GitHub repo](https://github.com/huorswords/Microsoft.Extensions.Logging.Log4Net.AspNetCore))
@@ -904,7 +904,7 @@ To create a custom logger, see [Implement a custom logging provider in .NET](/do
 
 * [Microsoft.Extensions.Logging source on GitHub](https://github.com/dotnet/runtime/tree/main/src/libraries/Microsoft.Extensions.Logging)
 * [View or download sample code](https://github.com/dotnet/AspNetCore.Docs/tree/main/aspnetcore/fundamentals/logging/index/samples/6.x) ([how to download](xref:index#how-to-download-a-sample)).
-* <xref:fundamentals/logging/loggermessage>
+* [High performance logging](/dotnet/core/extensions/high-performance-logging)
 * Logging bugs should be created in the [`dotnet/runtime`](https://github.com/dotnet/runtime/issues) GitHub repository.
 * <xref:blazor/fundamentals/logging>
 
@@ -1233,9 +1233,9 @@ Each log API uses a message template. The message template can contain placehold
 The *order of the parameters*, not their placeholder names, determines which parameters are used to provide placeholder values in log messages. In the following code, the parameter names are out of sequence in the placeholders of the message template:
 
 ```csharp
-string apples = 1;
-string pears = 2;
-string bananas = 3;
+var apples = 1;
+var pears = 2;
+var bananas = 3;
 
 _logger.LogInformation("Parameters: {pears}, {bananas}, {apples}", apples, pears, bananas);
 ```
@@ -1621,14 +1621,14 @@ For more information, see the following resources:
 * [Application Insights for ASP.NET Core applications](/azure/azure-monitor/app/asp-net-core) - Start here if you want to implement the full range of Application Insights telemetry along with logging.
 * [ApplicationInsightsLoggerProvider for .NET Core ILogger logs](/azure/azure-monitor/app/ilogger) - Start here if you want to implement the logging provider without the rest of Application Insights telemetry.
 * [Application Insights logging adapters](/azure/azure-monitor/app/asp-net-trace-logs).
-* [Install, configure, and initialize the Application Insights SDK](/learn/modules/instrument-web-app-code-with-application-insights) - Interactive tutorial on the Microsoft Learn site.
+* [Install, configure, and initialize the Application Insights SDK](/training/modules/instrument-web-app-code-with-application-insights) interactive tutorial.
 
 ## Third-party logging providers
 
 Third-party logging frameworks that work with ASP.NET Core:
 
 * [elmah.io](https://elmah.io/) ([GitHub repo](https://github.com/elmahio/Elmah.Io.Extensions.Logging))
-* [Gelf](https://docs.graylog.org/en/2.3/pages/gelf.html) ([GitHub repo](https://github.com/mattwcole/gelf-extensions-logging))
+* [Gelf](https://go2docs.graylog.org/5-0/getting_in_log_data/gelf.html) ([GitHub repo](https://github.com/mattwcole/gelf-extensions-logging))
 * [JSNLog](https://jsnlog.com/) ([GitHub repo](https://github.com/mperdeck/jsnlog))
 * [KissLog.net](https://kisslog.net/) ([GitHub repo](https://github.com/catalingavan/KissLog-net))
 * [Log4Net](https://logging.apache.org/log4net/) ([GitHub repo](https://github.com/huorswords/Microsoft.Extensions.Logging.Log4Net.AspNetCore))
@@ -1848,7 +1848,7 @@ To create a custom logger, see [Implement a custom logging provider in .NET](/do
 
 ## Additional resources
 
-* <xref:fundamentals/logging/loggermessage>
+* [High performance logging](/dotnet/core/extensions/high-performance-logging)
 * Logging bugs should be created in the [github.com/dotnet/runtime/](https://github.com/dotnet/runtime/issues) repo.
 * <xref:blazor/fundamentals/logging>
 

@@ -12,6 +12,8 @@ uid: host-and-deploy/azure-apps/index
 
 [Azure App Service](https://azure.microsoft.com/services/app-service/) is a [Microsoft cloud computing platform service](https://azure.microsoft.com/) for hosting web apps, including ASP.NET Core.
 
+[!INCLUDE[](~/includes/reliableWAP_H2.md)]
+
 ## Useful resources
 
 [App Service Documentation](/azure/app-service/) is the home for Azure Apps documentation, tutorials, samples, how-to guides, and other resources. Two notable tutorials that pertain to hosting ASP.NET Core apps are:
@@ -335,8 +337,10 @@ If you need to transform *web.config* on publish (for example, set environment v
 * [App Service overview](/azure/app-service/app-service-web-overview)
 * [Azure App Service diagnostics overview](/azure/app-service/app-service-diagnostics)
 * <xref:host-and-deploy/web-farm>
+* [Tutorial: Connect to SQL Database from .NET App Service without secrets using a managed identity](/azure/app-service/tutorial-connect-msi-sql-database?tabs=efcore%2Cdotnetcore)
 
-Azure App Service on Windows Server uses [Internet Information Services (IIS)](https://www.iis.net/). The following topics pertain to the underlying IIS technology:
+Azure App Service on Windows Server uses [Internet Information Services (IIS)](https://www.iis.net/). [Kestrel and YARP](https://devblogs.microsoft.com/dotnet/bringing-kestrel-and-yarp-to-azure-app-services/) on the front end provides the load balancer. The following topics pertain to the underlying IIS technology:
+<!-- Kestrel can't replace IIS because it's needed for ASP.NET Framework ,FX 3.5 and 4.8 -->
 
 * <xref:host-and-deploy/iis/index>
 * <xref:host-and-deploy/aspnet-core-module>

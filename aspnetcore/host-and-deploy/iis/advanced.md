@@ -5,7 +5,7 @@ description: Advanced configuration with the ASP.NET Core Module and Internet In
 monikerRange: '>= aspnetcore-5.0'
 ms.author: riande
 ms.custom: mvc
-ms.date: 5/7/2020
+ms.date: 02/13/2023
 uid: host-and-deploy/iis/advanced
 ---
 # Advanced configuration of the ASP.NET Core Module and IIS
@@ -29,6 +29,24 @@ Configure the managed stack size using the `stackSize` setting in bytes in the `
   </handlerSettings>
 </aspNetCore>
 ```
+
+## Disallow rotation on config
+
+The `disallowRotationOnConfigChange` setting is intended for blue/green scenarios where a change to global config should not cause all sites to recycle. When this flag is true, only changes relevant to the site itself will cause it to recycle. For example, a site recycles if its *web.config* changes or something changes that is relevant to the site's path from IIS's perspective. But a general change to *applicationHost.config* would not cause an app to recycle. The following example sets this setting to true:
+
+```xml
+<aspNetCore processPath="dotnet"
+    arguments=".\MyApp.dll"
+    stdoutLogEnabled="false"
+    stdoutLogFile="\\?\%home%\LogFiles\stdout"
+    hostingModel="inprocess">
+  <handlerSettings>
+    <handlerSetting name="disallowRotationOnConfigChange" value="true" />
+  </handlerSettings>
+</aspNetCore>
+```
+
+This setting corresponds to the API <xref:Microsoft.Web.Administration.ApplicationPoolRecycling.DisallowRotationOnConfigChange?displayProperty=nameWithType>
 
 ## Proxy configuration uses HTTP protocol and a pairing token
 
@@ -208,10 +226,10 @@ If the IIS worker process requires elevated access to the app, modify the Access
 
 1. Read &amp; execute permissions should be granted by default. Provide additional permissions as needed.
 
-Access can also be granted at a command prompt using the **ICACLS** tool. Using the *DefaultAppPool* as an example, the following command is used:
+Access can also be granted at a command prompt using the **ICACLS** tool. Using the *DefaultAppPool* as an example, the following command is used to grant read and execute permissions to the `MyWebApp` folder, subfolders, and files:
 
 ```console
-ICACLS C:\sites\MyWebApp /grant "IIS AppPool\DefaultAppPool":F
+ICACLS C:\sites\MyWebApp /grant "IIS AppPool\DefaultAppPool:(OI)(CI)RX"
 ```
 
 For more information, see the [icacls](/windows-server/administration/windows-commands/icacls) topic.
@@ -380,7 +398,7 @@ When deploying apps to servers with [Web Deploy](/iis/install/installing-publish
    ![Supply the Site name, physical path, and Host name in the Add Website step.](index/_static/add-website-ws2016.png)
 
    > [!WARNING]
-   > Top-level wildcard bindings (`http://*:80/` and `http://+:80`) should **not** be used. Top-level wildcard bindings can open up your app to security vulnerabilities. This applies to both strong and weak wildcards. Use explicit host names rather than wildcards. Subdomain wildcard binding (for example, `*.mysub.com`) doesn't have this security risk if you control the entire parent domain (as opposed to `*.com`, which is vulnerable). See [rfc7230 section-5.4](https://tools.ietf.org/html/rfc7230#section-5.4) for more information.
+   > Top-level wildcard bindings (`http://*:80/` and `http://+:80`) should **not** be used. Top-level wildcard bindings can open up your app to security vulnerabilities. This applies to both strong and weak wildcards. Use explicit host names rather than wildcards. Subdomain wildcard binding (for example, `*.mysub.com`) doesn't have this security risk if you control the entire parent domain (as opposed to `*.com`, which is vulnerable). See [RFC 9110: HTTP Semantics (Section 7.2: Host and :authority)](https://www.rfc-editor.org/rfc/rfc9110#field.host) for more information.
 
 1. Under the server's node, select **Application Pools**.
 

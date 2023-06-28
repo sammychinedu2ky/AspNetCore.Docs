@@ -1,16 +1,10 @@
 The `RedirectToLogin` component (`Shared/RedirectToLogin.razor`):
 
 * Manages redirecting unauthorized users to the login page.
-* Preserves the current URL that the user is attempting to access so that they can be returned to that page if authentication is successful.
+* The current URL that the user is attempting to access is maintained by so that they can be returned to that page if authentication is successful using:
+  * [Navigation history state](xref:blazor/fundamentals/routing#navigation-history-state) in ASP.NET Core 7.0 or later.
+  * A query string in ASP.NET Core 6.0 or earlier.
 
-```razor
-@inject NavigationManager Navigation
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@code {
-    protected override void OnInitialized()
-    {
-        Navigation.NavigateTo(
-            $"authentication/login?returnUrl={Uri.EscapeDataString(Navigation.Uri)}");
-    }
-}
-```
+Inspect the `RedirectToLogin` component in [reference source](https://github.com/dotnet/aspnetcore/blob/release/7.0/src/ProjectTemplates/Web.ProjectTemplates/content/ComponentsWebAssembly-CSharp/Client/Shared/RedirectToLogin.razor).
+
+[!INCLUDE[](~/includes/aspnetcore-repo-ref-source-links.md)]
